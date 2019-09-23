@@ -4,8 +4,8 @@
 
 [submodule "luci-app-clash"]
 	path = luci-app-unblockmusic
-	url = https://github.com/maxlicheng/luci-app-clash
+	url = https://github.com/gw826943555/luci-app-clash
 
 [submodule "clash"]
 	path = luci-app-unblockmusic
-	url = https://github.com/maxlicheng/clash
+	url = https://github.com/gw826943555/clash
