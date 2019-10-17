@@ -22,7 +22,7 @@ Server_Update() {
     ${uci_set}hashkey="$ssr_hashkey"
     ${uci_set}alias="[$ssr_group] $ssr_remarks"
     ${uci_set}auth_enable="0"
-    ${uci_set}switch_enable="1"
+    ${uci_set}switch_enable="0"
     ${uci_set}type="$ssr_type"
     ${uci_set}server="$ssr_host"
     ${uci_set}server_port="$ssr_port"
@@ -69,14 +69,14 @@ do
 	echo_date "从 ${subscribe_url[o]} 获取订阅"
 	echo_date "开始更新在线订阅列表..."
 	echo_date "开始下载订阅链接到本地临时文件，请稍等..."
-	subscribe_data=$(wget-ssl --user-agent="User-Agent: Mozilla" --no-check-certificate -T 3 -O- ${subscribe_url[o]})
+	subscribe_data=$(wget-ssl --user-agent="User-Agent:Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36" --no-check-certificate -t 10 -T 10 -O- ${subscribe_url[o]})
 	curl_code=$?
 	# 计算group的hashkey
 	ssr_grouphashkey=$(echo "${subscribe_url[o]}" | md5sum | cut -d ' ' -f1)
 	if [ ! $curl_code -eq 0 ];then
 		echo_date "下载订阅成功..."
 		echo_date "开始解析节点信息..."
-		subscribe_data=$(wget-ssl --no-check-certificate -T 3 -O- ${subscribe_url[o]})
+		subscribe_data=$(wget-ssl --no-check-certificate -t 10 -T 10 -O- ${subscribe_url[o]})
 		curl_code=$?
 	fi
 	if [ $curl_code -eq 0 ];then
