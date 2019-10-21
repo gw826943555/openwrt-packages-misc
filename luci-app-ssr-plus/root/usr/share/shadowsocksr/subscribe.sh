@@ -17,12 +17,13 @@ echo_date(){
 }
 
 Server_Update() {
-    local uci_set="uci -q set $name.$1."
+    local uci_set="uci -q set $name.$1."             
+    local uci_get="uci -q get $name.$1."             
     ${uci_set}grouphashkey="$ssr_grouphashkey"
     ${uci_set}hashkey="$ssr_hashkey"
     ${uci_set}alias="[$ssr_group] $ssr_remarks"
     ${uci_set}auth_enable="0"
-    ${uci_set}switch_enable="1"
+    ${uci_set}switch_enable="0"
     ${uci_set}type="$ssr_type"
     ${uci_set}server="$ssr_host"
     ${uci_set}server_port="$ssr_port"
