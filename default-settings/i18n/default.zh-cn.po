@@ -1,0 +1,2 @@
+msgid "WIFI Temperature"
+msgstr "无线温度“
