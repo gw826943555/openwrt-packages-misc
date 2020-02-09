@@ -1,7 +1,7 @@
 #!/bin/sh
 
 CONFIG=passwall
-LOG_FILE=/var/log/$CONFIG.log
+LOG_FILE=/tmp/$CONFIG.log
 RULE_PATH=/etc/config/${CONFIG}_rule
 Date=$(date "+%Y-%m-%d %H:%M:%S")
 

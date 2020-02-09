@@ -127,9 +127,6 @@ msgstr "用于科学上网。"
 msgid "For Game Mode or DNS resolution and more."
 msgstr "用于游戏模式或DNS解析等。"
 
-msgid "The selected server will not use Kcptun."
-msgstr "选中的服务器不会使用Kcptun。"
-
 msgid "The client can use the router's Socks5 proxy."
 msgstr "客户端可以使用路由器的Socks5代理。"
 
@@ -310,9 +307,6 @@ msgstr "证书路径"
 msgid "Encrypt Method"
 msgstr "加密"
 
-msgid "Kcptun Switch"
-msgstr "Kcptun开关"
-
 msgid "Latency"
 msgstr "延迟"
 
@@ -411,9 +405,6 @@ msgstr "UDP透明代理端口"
 
 msgid "Socks5 Proxy Port"
 msgstr "Socks5代理端口"
-
-msgid "Kcptun Port"
-msgstr "Kcptun端口"
 
 msgid "Custom Dnsmasq"
 msgstr "自定义Dnsmasq设置"
@@ -556,15 +547,6 @@ msgstr "V2ray路径"
 msgid "if you want to run from memory, change the path, such as /tmp/v2ray/, Then save the application and update it manually."
 msgstr "如果你希望从内存中运行，请更改路径，例如/tmp/v2ray/，然后保存应用后，再手动更新。"
 
-msgid "Kcptun Client Path"
-msgstr "Kcptun客户端路径"
-
-msgid "if you want to run from memory, change the path, such as /tmp/kcptun-client, Then save the application and update it manually."
-msgstr "如果你希望从内存中运行，请更改路径，例如/tmp/kcptun-client，然后保存应用后，再手动更新。"
-
-msgid "Make sure there is enough space to install Kcptun"
-msgstr "确保有足够的空间安装Kcptun"
-
 msgid "Brook Path"
 msgstr "Brook路径"
 
@@ -649,9 +631,6 @@ msgstr "清空日志"
 msgid "Need node support required"
 msgstr "需要节点支持"
 
-msgid "HAProxy cannot be used with KCP."
-msgstr "HAProxy不能和KCP一起使用"
-
 msgid "Password"
 msgstr "密码"
 
@@ -697,20 +676,8 @@ msgstr "代理IPv6"
 msgid "The IPv6 traffic can be proxyed when selected"
 msgstr "选中后可以代理IPv6流量"
 
-msgid "Use Kcptun"
-msgstr "使用Kcptun"
-
-msgid "Please confirm whether the Kcptun is installed. If not, please go to Rule Update download installation."
-msgstr "请确认KCP是否已安装，若没有请到自动更新下载安装。"
-
-msgid "Kcptun Server"
-msgstr "Kcptun服务器"
-
 msgid "Default:Current Server"
 msgstr "留空则使用当前服务器"
-
-msgid "Kcptun Config"
-msgstr "Kcptun参数配置"
 
 msgid "--crypt aes192 --key abc123 --mtu 1350 --sndwnd 128 --rcvwnd 1024 --mode fast"
 msgstr "默认Kcptun和SS服务器相同IP,参数中无需配置服务器IP和本地端口，需要配置的参数和格式如：--crypt aes192 --key abc123 --mtu 1350 --sndwnd 128 --rcvwnd 1024 --mode fast"

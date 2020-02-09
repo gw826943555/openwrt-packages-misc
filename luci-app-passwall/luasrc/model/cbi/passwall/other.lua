@@ -102,12 +102,6 @@ o = s:option(Value, "udp_redir_port", translate("UDP Redir Port"))
 o.datatype = "port"
 o.default = 1051
 o.rmempty = true
-
----- Kcptun Port
-o = s:option(Value, "kcptun_port", translate("Kcptun Port"))
-o.datatype = "port"
-o.default = 12948
-o.rmempty = true
 --]]
 
 -- [[ Other Settings ]]--
@@ -141,11 +135,6 @@ o.rmempty = false
 o:value("1")
 o:value("2")
 o:value("3")
-
----- 状态使用大图标
-o = s:option(Flag, "status_use_big_icon", translate("Status Use Big Icon"))
-o.default = "1"
-o.rmempty = false
 
 ---- 显示节点检测
 o =

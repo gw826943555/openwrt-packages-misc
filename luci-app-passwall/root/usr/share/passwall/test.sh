@@ -2,7 +2,7 @@
 
 CONFIG=passwall
 LOCK_FILE=/var/lock/${CONFIG}_test.lock
-LOG_FILE=/var/log/$CONFIG.log
+LOG_FILE=/tmp/$CONFIG.log
 
 get_date() {
 	echo "$(date "+%Y-%m-%d %H:%M:%S")"

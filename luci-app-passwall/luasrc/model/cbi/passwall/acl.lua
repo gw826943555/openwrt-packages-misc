@@ -7,11 +7,7 @@ local appname = "passwall"
 local n = {}
 uci:foreach(appname, "nodes", function(e)
     if e.type and e.address and e.remarks then
-        if e.use_kcp and e.use_kcp == "1" then
-            n[e[".name"]] = "%s+%s：[%s]" % {e.type, "Kcptun", e.remarks}
-        else
-            n[e[".name"]] = "%s：[%s]" % {e.type, e.remarks}
-        end
+        n[e[".name"]] = "%s：[%s]" % {e.type, e.remarks}
     end
 end)
 

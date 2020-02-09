@@ -64,8 +64,7 @@ o.inputstyle = "apply"
 function o.write(e, e)
     luci.sys
         .call("nohup /usr/share/passwall/subscription.sh > /dev/null 2>&1 &")
-    luci.http.redirect(luci.dispatcher.build_url("admin", "vpn", "passwall",
-                                                 "log"))
+--    luci.http.redirect(luci.dispatcher.build_url("admin", "vpn", "passwall", "log"))
 end
 
 ---- Subscribe Delete All
@@ -99,33 +98,11 @@ s = m:section(TypedSection, "global_app", translate("App Update"),
               translate("Please confirm that your firmware supports FPU."))
 s.anonymous = true
 s:append(Template("passwall/rule/v2ray_version"))
-s:append(Template("passwall/rule/kcptun_version"))
-s:append(Template("passwall/rule/brook_version"))
 
 ---- V2ray Path
 o = s:option(Value, "v2ray_file", translate("V2ray Path"), translate(
                  "if you want to run from memory, change the path, such as /tmp/v2ray/, Then save the application and update it manually."))
 o.default = "/usr/bin/v2ray/"
-o.rmempty = false
-
----- Kcptun client Path
-o = s:option(Value, "kcptun_client_file", translate("Kcptun Client Path"),
-             translate(
-                 "if you want to run from memory, change the path, such as /tmp/kcptun-client, Then save the application and update it manually."))
-o.default = "/usr/bin/kcptun-client"
-o.rmempty = false
-
---[[
-o = s:option(Button,  "_check_kcptun",  translate("Manually update"), translate("Make sure there is enough space to install Kcptun"))
-o.template = "passwall/kcptun"
-o.inputstyle = "apply"
-o.btnclick = "onBtnClick_kcptun(this);"
-o.id = "_kcptun-check_btn"]] --
-
----- Brook Path
-o = s:option(Value, "brook_file", translate("Brook Path"), translate(
-                 "if you want to run from memory, change the path, such as /tmp/brook, Then save the application and update it manually."))
-o.default = "/usr/bin/brook"
 o.rmempty = false
 
 return m

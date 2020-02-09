@@ -37,15 +37,6 @@ use_haproxy=$(config_t_get global_haproxy balancing_enable 0)
 for i in $(seq 1 $TCP_NODE_NUM); do
 	eval tmp_node=\$TCP_NODE$i
 	if [ "$tmp_node" != "nil" ]; then
-		#kcptun
-		use_kcp=$(config_n_get $tmp_node use_kcp 0)
-		if [ $use_kcp -gt 0 ]; then
-			icount=$(ps -w | grep kcptun-client | grep $CONFIG_PATH/kcptun_${i} | grep -v grep | wc -l)
-			if [ $icount = 0 ]; then
-				/etc/init.d/passwall restart
-				exit 0
-			fi
-		fi
 		[ -f "/var/etc/passwall/port/TCP_$i" ] && listen_port=$(echo -n `cat /var/etc/passwall/port/TCP_$i`)
 		icount=$(ps -w | grep -v grep | grep -i -E "${CONFIG}/TCP_${i}|brook tproxy -l 0.0.0.0:${listen_port}|ipt2socks -T -l ${listen_port}" | wc -l)
 		if [ $icount = 0 ]; then

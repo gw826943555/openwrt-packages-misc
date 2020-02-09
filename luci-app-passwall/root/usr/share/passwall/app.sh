@@ -17,7 +17,7 @@ CONFIG_TCP_FILE=$CONFIG_PATH/TCP.json
 CONFIG_UDP_FILE=$CONFIG_PATH/UDP.json
 CONFIG_SOCKS5_FILE=$CONFIG_PATH/SOCKS5.json
 LOCK_FILE=/var/lock/$CONFIG.lock
-LOG_FILE=/var/log/$CONFIG.log
+LOG_FILE=/tmp/$CONFIG.log
 RULE_PATH=/etc/config/${CONFIG}_rule
 APP_PATH=/usr/share/$CONFIG
 TMP_DNSMASQ_PATH=/var/etc/dnsmasq-passwall.d
@@ -177,7 +177,6 @@ BROOK_TCP_CMD=""
 BROOK_UDP_CMD=""
 TCP_REDIR_PORTS=$(config_t_get global_forwarding tcp_redir_ports '80,443')
 UDP_REDIR_PORTS=$(config_t_get global_forwarding udp_redir_ports '1:65535')
-KCPTUN_REDIR_PORT=$(config_t_get global_forwarding kcptun_port 12948)
 PROXY_MODE=$(config_t_get global proxy_mode chnroute)
 
 load_config() {
@@ -228,21 +227,15 @@ load_config() {
 }
 
 gen_ss_ssr_config_file() {
-	local type local_port kcptun node configfile
+	local type local_port node configfile
 	type=$1
 	local_port=$2
-	kcptun=$3
-	node=$4
-	configfile=$5
+	node=$3
+	configfile=$4
 	local port encrypt_method
 	port=$(config_n_get $node port)
 	encrypt_method=$(config_n_get $node ss_encrypt_method)
 	[ "$type" == "ssr" ] && encrypt_method=$(config_n_get $node ssr_encrypt_method)
-	[ "$kcptun" == "1" ] && {
-		server_ip=127.0.0.1
-		server_host=127.0.0.1
-		port=$KCPTUN_REDIR_PORT
-	}
 	cat <<-EOF >$configfile
 		{
 			"_comment": "$server_ip",
@@ -337,11 +330,11 @@ gen_start_config() {
 				echolog "找不到Brook客户端主程序，无法启用！"
 			fi
 		elif [ "$type" == "ssr" ]; then
-			gen_ss_ssr_config_file ssr $local_port 0 $node $config_file
+			gen_ss_ssr_config_file ssr $local_port $node $config_file
 			ssr_bin=$(find_bin ssr-local)
 			[ -n "$ssr_bin" ] && $ssr_bin -c $config_file -b 0.0.0.0 -u >/dev/null 2>&1 &
 		elif [ "$type" == "ss" ]; then
-			gen_ss_ssr_config_file ss $local_port 0 $node $config_file
+			gen_ss_ssr_config_file ss $local_port $node $config_file
 			ss_bin=$(find_bin ss-local)
 			[ -n "$ss_bin" ] && {
 				local plugin_params=""
@@ -410,38 +403,9 @@ gen_start_config() {
 			else
 				echolog "找不到V2ray客户端主程序，无法启用！"
 			fi
-		elif [ "$type" == "trojan" ]; then
-			SOCKS5_PROXY_PORT4=$(expr $SOCKS5_PROXY_PORT3 + 1)
-			local_port=$(get_not_exists_port_after $SOCKS5_PROXY_PORT4 tcp)
-			socks5_port=$local_port
-			lua $API_GEN_TROJAN $node client "127.0.0.1" $socks5_port >$config_file
-			trojan_bin=$(find_bin trojan)
-			[ -f "$trojan_bin" ] && $trojan_bin -c $config_file >/dev/null 2>&1 &
-			
-			local node_address=$(config_n_get $node address)
-			local node_port=$(config_n_get $node port)
-			local server_username=$(config_n_get $node username)
-			local server_password=$(config_n_get $node password)
-			eval port=\$UDP_REDIR_PORT$5
-			ipt2socks_bin=$(find_bin ipt2socks)
-			[ -f "$ipt2socks_bin" ] && $ipt2socks_bin -U -l $port -b 0.0.0.0 -s 127.0.0.1 -p $socks5_port -R >/dev/null &
-				
-			#redsocks_bin=$(find_bin redsocks2)
-			#[ -n "$redsocks_bin" ] && {
-			#	local redsocks_config_file=$CONFIG_PATH/redsocks_UDP_$i.conf
-			#	gen_redsocks_config $redsocks_config_file udp $port "127.0.0.1" $socks5_port
-			#	$redsocks_bin -c $redsocks_config_file >/dev/null &
-			#}
-		elif [ "$type" == "brook" ]; then
-			BROOK_UDP_CMD="tproxy -l 0.0.0.0:$local_port -s $server_ip:$port -p $(config_n_get $node password)"
-			brook_bin=$(config_t_get global_app brook_file $(find_bin brook))
-			if [ -f "$brook_bin" ]; then
-				$brook_bin $BROOK_UDP_CMD &>/dev/null &
-			else
-				echolog "找不到Brook客户端主程序，无法启用！"
-			fi
 		elif [ "$type" == "ssr" ]; then
-			gen_ss_ssr_config_file ssr $local_port 0 $node $config_file
+			echo "generate udp node config"
+			gen_ss_ssr_config_file ssr $local_port $node $config_file
 			ssr_bin=$(find_bin ssr-redir)
 			if [ -f "$ssr_bin" ]; then
 				$ssr_bin -c $config_file -f $RUN_PID_PATH/udp_ssr_1_$5 -U >/dev/null 2>&1 &
@@ -449,7 +413,7 @@ gen_start_config() {
 				echolog "找不到ssr客户端主程序，无法启用！"
 			fi
 		elif [ "$type" == "ss" ]; then
-			gen_ss_ssr_config_file ss $local_port 0 $node $config_file
+			gen_ss_ssr_config_file ss $local_port $node $config_file
 			ss_bin=$(find_bin ss-redir)
 			[ -f "$ss_bin" ] && {
 				local plugin_params=""
@@ -523,38 +487,8 @@ gen_start_config() {
 			trojan_bin=$(find_bin trojan)
 			[ -f "$trojan_bin" ] && $trojan_bin -c $config_file >/dev/null 2>&1 &
 		else
-			local kcptun_use kcptun_server_host kcptun_port kcptun_config
-			kcptun_use=$(config_n_get $node use_kcp 0)
-			kcptun_server_host=$(config_n_get $node kcp_server)
-			kcptun_port=$(config_n_get $node kcp_port)
-			kcptun_config="$(config_n_get $node kcp_opts)"
-			kcptun_bin=$(config_t_get global_app kcptun_client_file $(find_bin kcptun-client))
-			lbenabled=$(config_t_get global_haproxy balancing_enable 0)
-			if [ -z "$kcptun_bin" ]; then
-				echolog "【未安装Kcptun主程序，请到自动更新下载Kcptun】，跳过~"
-				force_stop
-			fi
-			if [ "$kcptun_use" == "1" ] && ([ -z "$kcptun_port" ] || [ -z "$kcptun_config" ]); then
-				echolog "【未配置Kcptun参数】，跳过~"
-				force_stop
-			fi
-			if [ "$kcptun_use" == "1" -a -n "$kcptun_port" -a -n "$kcptun_config" -a "$lbenabled" == "0" -a -f "$kcptun_bin" ]; then
-				local run_kcptun_ip=$server_ip
-				if [ -n "$kcptun_server_host" ]; then
-					kcptun_use_ipv6=$(config_n_get $node kcp_use_ipv6)
-					network_type="ipv4"
-					[ "$kcptun_use_ipv6" == "1" ] && network_type="ipv6"
-					kcptun_server_ip=$(get_host_ip $network_type $kcptun_server_host)
-					eval TCP_NODE${5}_IP=$kcptun_server_ip
-					run_kcptun_ip=$kcptun_server_ip
-					echolog "Kcptun节点IP地址:$kcptun_server_ip"
-				fi
-				KCPTUN_REDIR_PORT=$(get_not_exists_port_after $KCPTUN_REDIR_PORT udp)
-				$kcptun_bin --log $CONFIG_PATH/kcptun_${5}.log -l 0.0.0.0:$KCPTUN_REDIR_PORT -r $run_kcptun_ip:$kcptun_port $kcptun_config >/dev/null 2>&1 &
-			fi
-			
 			if [ "$type" == "ssr" ]; then
-				gen_ss_ssr_config_file ssr $local_port $kcptun_use $node $config_file
+				gen_ss_ssr_config_file ssr $local_port $node $config_file
 				ssr_bin=$(find_bin ssr-redir)
 				[ -f "$ssr_bin" ] && {
 					for k in $(seq 1 $process); do
@@ -562,7 +496,7 @@ gen_start_config() {
 					done
 				}
 			elif [ "$type" == "ss" ]; then
-				gen_ss_ssr_config_file ss $local_port $kcptun_use $node $config_file
+				gen_ss_ssr_config_file ss $local_port $node $config_file
 				ss_bin=$(find_bin ${type}-redir)
 				[ -f "$ss_bin" ] && {
 					local plugin_params=""
@@ -578,10 +512,6 @@ gen_start_config() {
 					done
 				}
 			elif [ "$type" == "brook" ]; then
-				[ "$kcptun_use" == "1" ] && {
-					server_ip=127.0.0.1
-					port=$KCPTUN_REDIR_PORT
-				}
 				BROOK_TCP_CMD="tproxy -l 0.0.0.0:$local_port -s $server_ip:$port -p $(config_n_get $node password)"
 				brook_bin=$(config_t_get global_app brook_file $(find_bin brook))
 				if [ -f "$brook_bin" ]; then
@@ -602,9 +532,11 @@ start_redir() {
 		[ "$node" != "nil" ] && {
 			TYPE=$(echo $(config_n_get $node type) | tr 'A-Z' 'a-z')
 			local config_file=$CONFIG_PATH/${1}_${i}.json
+			echo $config_file
 			eval current_port=\$${1}_${2}_PORT$i
 			local port=$(echo $(get_not_exists_port_after $current_port $3))
 			eval ${1}_${2}$i=$port
+			echo $1
 			gen_start_config $node $port $1 $config_file $i
 			echo $port > $RUN_PORT_PATH/${1}_${i}
 			eval ip=\$${1}_NODE${i}_IP
@@ -1112,7 +1044,6 @@ start() {
 	touch "$LOCK_FILE"
 	start_dns
 	add_dnsmasq
-	start_haproxy
 	start_redir SOCKS5 PROXY tcp
 	start_redir TCP REDIR tcp
 	start_redir UDP REDIR udp

@@ -2,77 +2,67 @@
 module("luci.controller.passwall", package.seeall)
 local appname = "passwall"
 local http = require "luci.http"
-local kcptun = require "luci.model.cbi.passwall.api.kcptun"
 local brook = require "luci.model.cbi.passwall.api.brook"
 local v2ray = require "luci.model.cbi.passwall.api.v2ray"
 
 function index()
     if not nixio.fs.access("/etc/config/passwall") then return end
-    entry({"admin", "vpn"}, firstchild(), "VPN", 45).dependent = false
-    entry({"admin", "vpn", "passwall", "show"}, call("show_menu")).leaf = true
-    entry({"admin", "vpn", "passwall", "hide"}, call("hide_menu")).leaf = true
-    if nixio.fs.access("/etc/config/passwall") and
-        nixio.fs.access("/etc/config/passwall_show") then
-        entry({"admin", "vpn", "passwall"},
-              alias("admin", "vpn", "passwall", "settings"), _("Pass Wall"), 1).dependent =
-            true
-    end
-    entry({"admin", "vpn", "passwall", "settings"}, cbi("passwall/global"),
-          _("Basic Settings"), 1).dependent = true
-    entry({"admin", "vpn", "passwall", "node_list"}, cbi("passwall/node_list"),
-          _("Node List"), 2).dependent = true
+    entry({"admin", "vpn"}, 
+    firstchild(), "VPN", 45).dependent = false
+    entry({"admin", "vpn", "passwall", "show"}, 
+    call("show_menu")).leaf = true
+    entry({"admin", "vpn", "passwall", "hide"}, 
+    call("hide_menu")).leaf = true
+    entry({"admin", "vpn", "passwall"},
+    alias("admin", "vpn", "passwall", "settings"), 
+    _("Pass Wall"), 1).dependent = true
+    entry({"admin", "vpn", "passwall", "settings"}, 
+    cbi("passwall/global"), _("Basic Settings"), 1).dependent = true
+    entry({"admin", "vpn", "passwall", "node_list"}, 
+    cbi("passwall/node_list"), _("Node List"), 2).dependent = true
     -- entry({"admin", "vpn", "passwall", "auto_switch"},
     --      cbi("passwall/auto_switch"), _("Auto Switch"), 3).leaf = true
     entry({"admin", "vpn", "passwall", "other"},
-          cbi("passwall/other", {autoapply = true}), _("Other Settings"), 94).leaf =
-        true
-    if nixio.fs.access("/usr/sbin/haproxy") then
-        entry({"admin", "vpn", "passwall", "balancing"},
-              cbi("passwall/balancing"), _("Load Balancing"), 95).leaf = true
-    end
-    entry({"admin", "vpn", "passwall", "rule"}, cbi("passwall/rule"),
-          _("Rule Update"), 96).leaf = true
-    entry({"admin", "vpn", "passwall", "acl"}, cbi("passwall/acl"),
-          _("Access control"), 97).leaf = true
+    cbi("passwall/other", {autoapply = true}), _("Other Settings"), 94).leaf = true
+    entry({"admin", "vpn", "passwall", "rule"}, 
+    cbi("passwall/rule"), _("Rule Update"), 96).leaf = true
+    entry({"admin", "vpn", "passwall", "acl"}, 
+    cbi("passwall/acl"), _("Access control"), 97).leaf = true
     entry({"admin", "vpn", "passwall", "rule_list"},
-          cbi("passwall/rule_list", {autoapply = true}),
-          _("Set Blacklist And Whitelist"), 98).leaf = true
+    cbi("passwall/rule_list", {autoapply = true}), _("Set Blacklist And Whitelist"), 98).leaf = true
     entry({"admin", "vpn", "passwall", "log"},
-          cbi("passwall/log", {autoapply = true}), _("Watch Logs"), 99).leaf =
-        true
+    cbi("passwall/log", {autoapply = true}), _("Watch Logs"), 99).leaf = true
     entry({"admin", "vpn", "passwall", "node_config"},
-          cbi("passwall/node_config")).leaf = true
+    cbi("passwall/node_config")).leaf = true
 
-    entry({"admin", "vpn", "passwall", "link_add_node"}, call("link_add_node")).leaf =
-        true
-    entry({"admin", "vpn", "passwall", "get_log"}, call("get_log")).leaf = true
-    entry({"admin", "vpn", "passwall", "clear_log"}, call("clear_log")).leaf =
-        true
-    entry({"admin", "vpn", "passwall", "status"}, call("status")).leaf = true
-    entry({"admin", "vpn", "passwall", "connect_status"}, call("connect_status")).leaf =
-        true
-    entry({"admin", "vpn", "passwall", "check_port"}, call("check_port")).leaf =
-        true
-    entry({"admin", "vpn", "passwall", "ping_node"}, call("ping_node")).leaf =
-        true
-    entry({"admin", "vpn", "passwall", "set_node"}, call("set_node")).leaf =
-        true
-    entry({"admin", "vpn", "passwall", "copy_node"}, call("copy_node")).leaf =
-        true
-    entry({"admin", "vpn", "passwall", "update_rules"}, call("update_rules")).leaf =
-        true
-    entry({"admin", "vpn", "passwall", "kcptun_check"}, call("kcptun_check")).leaf =
-        true
-    entry({"admin", "vpn", "passwall", "kcptun_update"}, call("kcptun_update")).leaf =
-        true
-    entry({"admin", "vpn", "passwall", "brook_check"}, call("brook_check")).leaf =
-        true
-    entry({"admin", "vpn", "passwall", "brook_update"}, call("brook_update")).leaf =
-        true
-    entry({"admin", "vpn", "passwall", "v2ray_check"}, call("v2ray_check")).leaf =
-        true
-    entry({"admin", "vpn", "passwall", "v2ray_update"}, call("v2ray_update")).leaf =
-        true
+    entry({"admin", "vpn", "passwall", "link_add_node"}, 
+    call("link_add_node")).leaf = true
+    entry({"admin", "vpn", "passwall", "get_log"}, 
+    call("get_log")).leaf = true
+    entry({"admin", "vpn", "passwall", "clear_log"}, 
+    call("clear_log")).leaf = true
+    entry({"admin", "vpn", "passwall", "status"}, 
+    call("status")).leaf = true
+    entry({"admin", "vpn", "passwall", "connect_status"}, 
+    call("connect_status")).leaf = true
+    entry({"admin", "vpn", "passwall", "check_port"}, 
+    call("check_port")).leaf = true
+    entry({"admin", "vpn", "passwall", "ping_node"}, 
+    call("ping_node")).leaf = true
+    entry({"admin", "vpn", "passwall", "set_node"}, 
+    call("set_node")).leaf = true
+    entry({"admin", "vpn", "passwall", "copy_node"}, 
+    call("copy_node")).leaf = true
+    entry({"admin", "vpn", "passwall", "update_rules"}, 
+    call("update_rules")).leaf = true
+    entry({"admin", "vpn", "passwall", "brook_check"}, 
+    call("brook_check")).leaf = true
+    entry({"admin", "vpn", "passwall", "brook_update"}, 
+    call("brook_update")).leaf = true
+    entry({"admin", "vpn", "passwall", "v2ray_check"}, 
+    call("v2ray_check")).leaf = true
+    entry({"admin", "vpn", "passwall", "v2ray_update"}, 
+    call("v2ray_update")).leaf = true
 end
 
 local function http_write_json(content)
@@ -98,28 +88,18 @@ function link_add_node()
 end
 
 function get_log()
-    -- luci.sys.exec("[ -f /var/log/passwall.log ] && sed '1!G;h;$!d' /var/log/passwall.log > /var/log/passwall_show.log")
+    -- luci.sys.exec("[ -f /tmp/passwall.log ] && sed '1!G;h;$!d' /tmp/passwall.log > /var/log/passwall_show.log")
     luci.http.write(luci.sys.exec(
-                        "[ -f '/var/log/passwall.log' ] && cat /var/log/passwall.log"))
+                        "[ -f '/tmp/passwall.log' ] && cat /tmp/passwall.log"))
 end
 
-function clear_log() luci.sys.call("echo '' > /var/log/passwall.log") end
+function clear_log() luci.sys.call("echo '' > /tmp/passwall.log") end
 
 function status()
     -- local dns_mode = luci.sys.exec("echo -n `uci -q get " .. appname .. ".@global[0].dns_mode`")
     local e = {}
-    e.dns_mode_status = luci.sys.call("netstat -apn | grep 7913 >/dev/null") ==
-                            0
-    e.haproxy_status = luci.sys.call(
-                           "ps -w | grep -v grep | grep -i 'haproxy -f /var/etc/" ..
-                               appname .. "/haproxy.cfg' >/dev/null") == 0
-    e.kcptun_status = luci.sys.call(
-                          "ps -w | grep -v grep | grep -i 'log /var/etc/" ..
-                              appname .. "/kcptun' >/dev/null") == 0
-
-    local tcp_node_num = luci.sys.exec(
-                             "echo -n `uci -q get %s.@global_other[0].tcp_node_num`" %
-                                 appname)
+    e.dns_mode_status = luci.sys.call("netstat -apn | grep 7913 >/dev/null") ==0
+    local tcp_node_num = luci.sys.exec("echo -n `uci -q get %s.@global_other[0].tcp_node_num`" % appname)
     for i = 1, tcp_node_num, 1 do
         local listen_port = luci.sys.exec(
                                 string.format(
@@ -166,14 +146,14 @@ end
 
 function connect_status()
     local e = {}
-    if luci.http.formvalue("type") == "google" then
-        e.status = luci.sys.call(
-                       "echo `/usr/share/passwall/test.sh test_url 'www.google.com'` | grep 200 >/dev/null") ==
-                       0
+    if luci.http.formvalue("type") == "baidu" then
+        e.status = luci.sys.call("echo `/usr/share/passwall/test.sh test_url 'www.baidu.com'` | grep 200 >/dev/null") == 0
+    elseif luci.http.formvalue("type") == "taobao" then
+        e.status = luci.sys.call("echo `/usr/share/passwall/test.sh test_url 'www.taobao.com'` | grep 200 >/dev/null") == 0
+    elseif luci.http.formvalue("type") == "google" then
+        e.status = luci.sys.call("echo `/usr/share/passwall/test.sh test_url 'www.google.com'` | grep 200 >/dev/null") == 0
     else
-        e.status = luci.sys.call(
-                       "echo `/usr/share/passwall/test.sh test_url 'www.baidu.com'` | grep 200 >/dev/null") ==
-                       0
+        e.status = luci.sys.call("echo `/usr/share/passwall/test.sh test_url 'www.youtube.com'` | grep 200 >/dev/null") == 0
     end
     luci.http.prepare_content("application/json")
     luci.http.write_json(e)
@@ -235,8 +215,7 @@ function check_port()
         uci:foreach("passwall", "nodes", function(s)
             local ret = ""
             local tcp_socket
-            if (s.use_kcp and s.use_kcp == "1" and s.kcp_port) or
-                (s.v2ray_transport and s.v2ray_transport == "mkcp" and s.port) then
+            if (s.v2ray_transport and s.v2ray_transport == "mkcp" and s.port) then
             else
                 local type = s.type
                 if type and type ~= "V2ray_balancing" and s.address and s.port and
@@ -265,8 +244,7 @@ function check_port()
             local ret = ""
             local tcp_socket
             local udp_socket
-            if (s.use_kcp and s.use_kcp == "1" and s.kcp_port) or
-                (s.v2ray_transport and s.v2ray_transport == "mkcp" and s.port) then
+            if (s.v2ray_transport and s.v2ray_transport == "mkcp" and s.port) then
             else
                 local type = s.type
                 if type and type ~= "V2ray_balancing" and s.address and s.port and
@@ -299,26 +277,6 @@ function update_rules()
     local update = luci.http.formvalue("update")
     luci.sys.call("nohup /usr/share/passwall/rule_update.sh '" .. update ..
                       "' 2>&1 &")
-end
-
-function kcptun_check()
-    local json = kcptun.to_check("")
-    http_write_json(json)
-end
-
-function kcptun_update()
-    local json = nil
-    local task = http.formvalue("task")
-    if task == "extract" then
-        json = kcptun.to_extract(http.formvalue("file"),
-                                 http.formvalue("subfix"))
-    elseif task == "move" then
-        json = kcptun.to_move(http.formvalue("file"))
-    else
-        json = kcptun.to_download(http.formvalue("url"))
-    end
-
-    http_write_json(json)
 end
 
 function brook_check()

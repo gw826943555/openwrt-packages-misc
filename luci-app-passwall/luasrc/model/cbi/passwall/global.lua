@@ -20,12 +20,7 @@ uci:foreach(appname, "nodes", function(e)
     local address = e.address
     if address == nil then address = "" end
     if type and address and e.remarks then
-        if e.use_kcp and e.use_kcp == "1" then
-            n[e[".name"]] = "%s+%s：[%s] %s" %
-                                {translate(type), "Kcptun", e.remarks, address}
-        else
-            n[e[".name"]] = "%s：[%s] %s" % {translate(type), e.remarks, address}
-        end
+        n[e[".name"]] = "%s：[%s] %s" % {translate(type), e.remarks, address}
     end
 end)
 
@@ -34,13 +29,7 @@ for key, _ in pairs(n) do table.insert(key_table, key) end
 table.sort(key_table)
 
 m = Map(appname)
-local status_use_big_icon = api.uci_get_type("global_other",
-                                             "status_use_big_icon", 1)
-if status_use_big_icon and status_use_big_icon == "1" then
-    m:append(Template("passwall/global/status"))
-else
-    m:append(Template("passwall/global/status2"))
-end
+m:append(Template("passwall/global/status"))
 
 -- [[ Global Settings ]]--
 s = m:section(TypedSection, "global", translate("Global Settings"))
@@ -71,8 +60,7 @@ local udp_node_num = api.uci_get_type("global_other", "udp_node_num", 1)
 for i = 1, udp_node_num, 1 do
     if i == 1 then
         o = s:option(ListValue, "udp_node" .. i, translate("UDP Node"),
-                     translate("For Game Mode or DNS resolution and more.") ..
-                         translate("The selected server will not use Kcptun."))
+                     translate("For Game Mode or DNS resolution and more."))
         o:value("nil", translate("Close"))
         o:value("default", translate("Same as the tcp node"))
     else
@@ -205,9 +193,6 @@ o:value("gfwlist", translate("GFW List"))
 o:value("chnroute", translate("China WhiteList"))
 o.default = "default"
 o.rmempty = false
-
----- Tips
-s:append(Template("passwall/global/tips"))
 
 --[[
 local apply = luci.http.formvalue("cbi.apply")

@@ -6,7 +6,7 @@
 CONFIG=passwall
 LOCK_FILE=/var/lock/${CONFIG}_subscription.lock
 Date=$(date "+%Y-%m-%d %H:%M:%S")
-LOG_FILE=/var/log/$CONFIG.log
+LOG_FILE=/tmp/$CONFIG.log
 
 config_t_get() {
 	local index=0
