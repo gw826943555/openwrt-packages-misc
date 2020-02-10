@@ -64,7 +64,7 @@ o.inputstyle = "apply"
 function o.write(e, e)
     luci.sys
         .call("nohup /usr/share/passwall/subscription.sh > /dev/null 2>&1 &")
---    luci.http.redirect(luci.dispatcher.build_url("admin", "vpn", "passwall", "log"))
+    luci.http.redirect(luci.dispatcher.build_url("admin", "vpn", "passwall", "log"))
 end
 
 ---- Subscribe Delete All
