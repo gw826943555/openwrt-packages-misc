@@ -18,7 +18,7 @@ config global_haproxy
 config global_delay
 	option auto_on '0'
 	option start_daemon '0'
-	option start_delay '1'
+	option start_delay '10'
 
 config global_forwarding
 	option process '1'
