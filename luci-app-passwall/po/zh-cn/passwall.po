@@ -89,10 +89,19 @@ msgid "Running Status"
 msgstr "运行状态"
 
 msgid "Baidu Connection"
-msgstr "百度连接"
+msgstr "百度连接延时"
+
+msgid "Taobao Connection"
+msgstr "淘宝连接延时"
 
 msgid "Google Connection"
-msgstr "谷歌连接"
+msgstr "谷歌连接延时"
+
+msgid "YouTube Connection"
+msgstr "油管连接延时"
+
+msgid "Second(s)"
+msgstr "秒"
 
 msgid "Node Check"
 msgstr "节点检测"

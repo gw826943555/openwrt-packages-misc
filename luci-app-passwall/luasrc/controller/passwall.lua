@@ -70,16 +70,6 @@ local function http_write_json(content)
     http.write_json(content or {code = 1})
 end
 
-function show_menu()
-    luci.sys.call("touch /etc/config/passwall_show")
-    luci.http.redirect(luci.dispatcher.build_url("admin", "vpn", "passwall"))
-end
-
-function hide_menu()
-    luci.sys.call("rm -rf /etc/config/passwall_show")
-    luci.http.redirect(luci.dispatcher.build_url("admin", "status", "overview"))
-end
-
 function link_add_node()
     local link = luci.http.formvalue("link")
     luci.sys.call('rm -f /tmp/links.conf && echo "' .. link ..
