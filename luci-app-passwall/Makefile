@@ -68,7 +68,7 @@ define Package/$(PKG_NAME)
   SUBMENU:=3. Applications
   TITLE:=LuCI support for PassWall By Lienol
   PKGARCH:=all
-  DEPENDS:=+libmbedtls +iptables-mod-tproxy +kmod-ipt-tproxy +iptables-mod-ipopt +kmod-ipt-ipopt +ip +ipset +coreutils +coreutils-base64 +coreutils-nohup +luci-lib-jsonc \
+  DEPENDS:=+luci-lib-ipkg +wget +libmbedtls +iptables-mod-tproxy +kmod-ipt-tproxy +iptables-mod-ipopt +kmod-ipt-ipopt +ip +ipset +coreutils +coreutils-base64 +coreutils-nohup +luci-lib-jsonc \
   +bash +wget +resolveip +unzip +dnsmasq-full +tcping \
   +PACKAGE_$(PKG_NAME)_INCLUDE_Shadowsocks:shadowsocks-libev-ss-redir \
   +PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR:shadowsocksr-libev-alt \
