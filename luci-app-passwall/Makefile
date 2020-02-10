@@ -108,6 +108,9 @@ define Package/$(PKG_NAME)/install
 	
 	$(INSTALL_DIR) $(1)/usr/share/passwall
 	cp -pR ./root/usr/share/passwall/* $(1)/usr/share/passwall
+
+	$(INSTALL_DIR) $(1)/usr/share/passwall
+	cp -pR ./root/www/luci-static/passwall/* $(1)/www/luci-static/passwall
 	
 	$(INSTALL_DIR) $(1)/usr/lib/lua/luci
 	cp -pR ./luasrc/* $(1)/usr/lib/lua/luci/
