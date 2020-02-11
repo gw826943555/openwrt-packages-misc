@@ -113,20 +113,6 @@ end
 o:value("local_7913", translate("Use local port 7913 as DNS"))
 o:value("nonuse", translate("No patterns are used"))
 
----- Upstream trust DNS Server for ChinaDNS-NG
-o = s:option(Value, "up_trust_chinadns_ng_dns",
-             translate("Upstream trust DNS Server for ChinaDNS-NG") .. "(UDP)",
-             translate(
-                 "You can use other resolving DNS services as trusted DNS, Example: dns-forwarder... 127.0.0.1#5353<br />Only use two at most, english comma separation, If you do not fill in the # and the following port, you are using port 53."))
-o.default = "pdnsd"
-if is_installed("pdnsd") or is_installed("pdnsd-alt") or is_finded("pdnsd") then
-    o:value("pdnsd", "pdnsd + " .. translate("Use TCP Node Resolve DNS"))
-end
-o:value("8.8.4.4,8.8.8.8", "8.8.4.4, 8.8.8.8 (Google DNS)")
-o:value("208.67.222.222,208.67.220.220",
-        "208.67.222.222, 208.67.220.220 (Open DNS)")
-o:depends("dns_mode", "chinadns-ng")
-
 ---- Use TCP Node Resolve DNS
 --[[ if is_installed("pdnsd") or is_installed("pdnsd-alt") or is_finded("pdnsd") then
     o = s:option(Flag, "use_tcp_node_resolve_dns",
@@ -144,7 +130,6 @@ o:value("8.8.4.4, 8.8.8.8", "8.8.4.4, 8.8.8.8 (Google DNS)")
 o:value("208.67.222.222", "208.67.222.222 (Open DNS)")
 o:value("208.67.220.220", "208.67.220.220 (Open DNS)")
 o:depends("dns_mode", "pdnsd")
-o:depends("up_trust_chinadns_ng_dns", "pdnsd")
 
 ---- DNS Hijack
 o = s:option(Flag, "dns_53", translate("DNS Hijack"))

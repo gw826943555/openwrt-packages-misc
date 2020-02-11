@@ -644,38 +644,6 @@ start_dns() {
 			echolog "DNS：pdnsd..."
 		}
 	;;
-	chinadns-ng)
-		chinadns_ng_bin=$(find_bin chinadns-ng)
-		[ -n "$chinadns_ng_bin" ] && {
-			other_port=$(expr $DNS_PORT + 1)
-			cat $RULE_PATH/gfwlist.conf | sort | uniq | sed -e '/127.0.0.1/d' | sed 's/ipset=\/.//g' | sed 's/\/gfwlist//g' > $CONFIG_PATH/gfwlist_chinadns_ng.txt
-			[ -f "$CONFIG_PATH/gfwlist_chinadns_ng.txt" ] && local gfwlist_param="-g $CONFIG_PATH/gfwlist_chinadns_ng.txt"
-			[ -f "$RULE_PATH/chnlist" ] && local chnlist_param="-m $RULE_PATH/chnlist"
-			
-			up_trust_chinadns_ng_dns=$(config_t_get global up_trust_chinadns_ng_dns "pdnsd")
-			if [ "$up_trust_chinadns_ng_dns" == "pdnsd" ]; then
-				if [ -z "$TCP_NODE1" -o "$TCP_NODE1" == "nil" ]; then
-					echolog "DNS：ChinaDNS-NG + pdnsd 模式需要启用TCP节点！"
-					force_stop
-				else
-					use_tcp_node_resolve_dns=1
-					gen_pdnsd_config $other_port
-					pdnsd_bin=$(find_bin pdnsd)
-					[ -n "$pdnsd_bin" ] && {
-						DNS_FORWARD=$(echo $DNS_FORWARD | sed 's/,/ /g')
-						nohup $pdnsd_bin --daemon -c $pdnsd_dir/pdnsd.conf -d >/dev/null 2>&1 &
-						nohup $chinadns_ng_bin -l $DNS_PORT -c $UP_CHINA_DNS -t 127.0.0.1#$other_port $gfwlist_param $chnlist_param >/dev/null 2>&1 &
-						echolog "DNS：ChinaDNS-NG + pdnsd($DNS_FORWARD)，国内DNS：$UP_CHINA_DNS"
-					}
-				fi
-			else
-				use_udp_node_resolve_dns=1
-				DNS_FORWARD=$(echo $up_trust_chinadns_ng_dns | sed 's/,/ /g')
-				nohup $chinadns_ng_bin -l $DNS_PORT -c $UP_CHINA_DNS -t $up_trust_chinadns_ng_dns $gfwlist_param $chnlist_param >/dev/null 2>&1 &
-				echolog "DNS：ChinaDNS-NG，国内DNS：$UP_CHINA_DNS，可信DNS：$up_trust_chinadns_ng_dns，如果不能使用，请确保UDP节点已打开并且支持UDP转发。"
-			fi
-		}
-	;;
 	esac
 }
 
