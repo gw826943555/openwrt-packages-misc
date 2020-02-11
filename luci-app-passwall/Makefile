@@ -35,10 +35,6 @@ config PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_socks
 config PACKAGE_$(PKG_NAME)_INCLUDE_V2ray
 	bool "Include V2ray"
 	default n
-
-config PACKAGE_$(PKG_NAME)_INCLUDE_Trojan
-	bool "Include Trojan"
-	default n
 	
 config PACKAGE_$(PKG_NAME)_INCLUDE_Brook
 	bool "Include Brook"
@@ -67,7 +63,6 @@ define Package/$(PKG_NAME)
   +PACKAGE_$(PKG_NAME)_INCLUDE_Shadowsocks_socks:shadowsocks-libev-ss-local \
   +PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_socks:shadowsocksr-libev-ssr-local \
   +PACKAGE_$(PKG_NAME)_INCLUDE_V2ray:v2ray \
-  +PACKAGE_$(PKG_NAME)_INCLUDE_Trojan:trojan \
   +PACKAGE_$(PKG_NAME)_INCLUDE_Brook:brook \
   +PACKAGE_$(PKG_NAME)_INCLUDE_haproxy:haproxy \
   +PACKAGE_$(PKG_NAME)_INCLUDE_pdnsd:pdnsd-alt

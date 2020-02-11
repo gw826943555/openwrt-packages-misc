@@ -26,7 +26,6 @@ RESOLVFILE=/tmp/resolv.conf.d/resolv.conf.auto
 lanip=$(uci -q get network.lan.ipaddr)
 DNS_PORT=7913
 API_GEN_V2RAY=/usr/lib/lua/luci/model/cbi/passwall/api/gen_v2ray_client_config_file.lua
-API_GEN_TROJAN=/usr/lib/lua/luci/model/cbi/passwall/api/gen_trojan_client_config_file.lua
 
 get_date() {
 	echo "$(date "+%Y-%m-%d %H:%M:%S")"
@@ -317,10 +316,6 @@ gen_start_config() {
 			else
 				echolog "找不到V2ray客户端主程序，无法启用！"
 			fi
-		elif [ "$type" == "trojan" ]; then
-			lua $API_GEN_TROJAN $node client "0.0.0.0" $local_port >$config_file
-			trojan_bin=$(find_bin trojan)
-			[ -f "$trojan_bin" ] && $trojan_bin -c $config_file >/dev/null 2>&1 &
 		elif [ "$type" == "brook" ]; then
 			BROOK_SOCKS5_CMD="client -l 0.0.0.0:$local_port -i 0.0.0.0 -s $server_ip:$port -p $(config_n_get $node password)"
 			brook_bin=$(config_t_get global_app brook_file $(find_bin brook))
@@ -476,10 +471,6 @@ gen_start_config() {
 			else
 				echolog "找不到V2ray客户端主程序，无法启用！"
 			fi
-		elif [ "$type" == "trojan" ]; then
-			lua $API_GEN_TROJAN $node nat "0.0.0.0" $local_port >$config_file
-			trojan_bin=$(find_bin trojan)
-			[ -f "$trojan_bin" ] && $trojan_bin -c $config_file >/dev/null 2>&1 &
 		else
 			if [ "$type" == "ssr" ]; then
 				gen_ss_ssr_config_file ssr $local_port $node $config_file

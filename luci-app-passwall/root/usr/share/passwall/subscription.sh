@@ -48,9 +48,6 @@ start_subscribe() {
 			local addnum_v2ray=0
 			local updatenum_v2ray=0
 			local delnum_v2ray=0
-			local addnum_trojan=0
-			local updatenum_trojan=0
-			local delnum_trojan=0
 			config_get subscrib_remark $1 remark
 			let index+=1
 			echo "$Date: 正在订阅：$url" >> $LOG_FILE
@@ -86,9 +83,6 @@ start_subscribe() {
 					elif expr "$link" : "vmess://";then
 						link_type="v2ray"
 						new_link=$(echo -n "$link" | sed 's/vmess:\/\///g')
-					elif expr "$link" : "trojan://";then
-						link_type="trojan"
-						new_link=$(echo -n "$link" | sed 's/trojan:\/\///g')
 					fi
 					[ -z "$link_type" ] && continue
 					get_remote_config "$link_type" "$new_link"
@@ -103,7 +97,6 @@ start_subscribe() {
 			[ "$addnum_ss" -gt 0 ] || [ "$updatenum_ss" -gt 0 ] || [ "$delnum_ss" -gt 0 ] && echo "$Date: $subscrib_remark： SS节点新增 $addnum_ss 个，修改 $updatenum_ss 个，删除 $delnum_ss 个。" >> $LOG_FILE
 			[ "$addnum_ssr" -gt 0 ] || [ "$updatenum_ssr" -gt 0 ] || [ "$delnum_ssr" -gt 0 ] && echo "$Date: $subscrib_remark： SSR节点新增 $addnum_ssr 个，修改 $updatenum_ssr 个，删除 $delnum_ssr 个。" >> $LOG_FILE
 			[ "$addnum_v2ray" -gt 0 ] || [ "$updatenum_v2ray" -gt 0 ] || [ "$delnum_v2ray" -gt 0 ] && echo "$Date: $subscrib_remark： V2ray节点新增 $addnum_v2ray 个，修改 $updatenum_v2ray 个，删除 $delnum_v2ray 个。" >> $LOG_FILE
-			[ "$addnum_trojan" -gt 0 ] || [ "$updatenum_trojan" -gt 0 ] || [ "$delnum_trojan" -gt 0 ] && echo "$Date: $subscrib_remark： Trojan节点新增 $addnum_trojan 个，修改 $updatenum_trojan 个，删除 $delnum_trojan 个。" >> $LOG_FILE
 		}
 	}
 }
@@ -200,12 +193,6 @@ get_remote_config(){
 		remarks="${json_ps}"
 		node_address=$json_node_address
 		node_port=$json_node_port
-	elif [ "$1" == "trojan" ]; then
-		link="$2"
-		node_password=$(echo "$link" | sed 's/trojan:\/\///g' | awk -F '@' '{print $1}')
-		node_address=$(echo "$link" | sed 's/trojan:\/\///g' | awk -F '@' '{print $2}' | awk -F ':' '{print $1}')
-		node_port=$(echo "$link" | sed 's/trojan:\/\///g' | awk -F '@' '{print $2}' | awk -F ':' '{print $2}')
-		remarks="${node_address}:${node_port}"
 	elif [ "$1" == "ssd" ]; then
 		link_type="ss"
 		new_node_type=$(echo $link_type | tr '[a-z]' '[A-Z]')
@@ -371,21 +358,6 @@ add_nodes(){
 		elif [ "$1" == "update" ]; then
 			let updatenum_v2ray+=1
 		fi
-		
-	elif [ "$2" == "trojan" ]; then
-		${uci_set}add_mode="$add_mode"
-		${uci_set}remarks="$remarks"
-		${uci_set}type="Trojan"
-		${uci_set}address="$node_address"
-		${uci_set}port="$node_port"
-		${uci_set}password="$node_password"
-		
-		if [ "$1" == "add" ]; then
-			let addnum_trojan+=1
-		elif [ "$1" == "update" ]; then
-			let updatenum_trojan+=1
-		fi
-		
 	fi
 	uci commit $CONFIG
 }
@@ -432,8 +404,6 @@ del_config(){
 					let delnum_ssr+=1 #删除该节点
 				elif [ "$del_type" == "V2ray" ]; then
 					let delnum_v2ray+=1 #删除该节点
-				elif [ "$del_type" == "Trojan" ]; then
-					let delnum_trojan=1 #删除该节点
 				fi
 				
 			done
@@ -526,9 +496,6 @@ add() {
 			elif expr "$link" : "vmess://";then
 				link_type="v2ray"
 				new_link=$(echo -n "$link" | sed 's/vmess:\/\///g')
-			elif expr "$link" : "trojan://";then
-				link_type="trojan"
-				new_link=$(echo -n "$link" | sed 's/trojan:\/\///g')
 			fi
 			[ -z "$link_type" ] && continue
 			get_remote_config "$link_type" "$new_link" 1
