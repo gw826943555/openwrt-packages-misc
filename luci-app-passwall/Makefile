@@ -55,10 +55,6 @@ config PACKAGE_$(PKG_NAME)_INCLUDE_ChinaDNS_NG
 config PACKAGE_$(PKG_NAME)_INCLUDE_pdnsd
 	bool "Include pdnsd"
 	default y
-	
-config PACKAGE_$(PKG_NAME)_INCLUDE_dns2socks
-	bool "Include dns2socks"
-	default n
 
 endmenu
 endef
@@ -79,8 +75,7 @@ define Package/$(PKG_NAME)
   +PACKAGE_$(PKG_NAME)_INCLUDE_Brook:brook \
   +PACKAGE_$(PKG_NAME)_INCLUDE_haproxy:haproxy \
   +PACKAGE_$(PKG_NAME)_INCLUDE_ChinaDNS_NG:chinadns-ng \
-  +PACKAGE_$(PKG_NAME)_INCLUDE_pdnsd:pdnsd-alt \
-  +PACKAGE_$(PKG_NAME)_INCLUDE_dns2socks:dns2socks
+  +PACKAGE_$(PKG_NAME)_INCLUDE_pdnsd:pdnsd-alt
 endef
 
 define Build/Prepare

@@ -9,7 +9,7 @@ config global
 	option dns_forward '8.8.4.4'
 	option use_tcp_node_resolve_dns '1'
 	option dns_53 '0'
-	option proxy_mode 'chnroute'
+	option proxy_mode 'gfwlist'
 	option localhost_proxy_mode 'gfwlist'
 
 config global_haproxy

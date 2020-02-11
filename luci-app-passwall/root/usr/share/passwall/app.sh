@@ -634,19 +634,6 @@ start_dns() {
 	local_7913)
 		echolog "DNS：使用本机7913端口DNS服务器解析域名..."
 	;;
-	dns2socks)
-		if [ -n "$SOCKS5_NODE1" -a "$SOCKS5_NODE1" != "nil" ]; then
-			dns2socks_bin=$(find_bin dns2socks)
-			[ -n "$dns2socks_bin" ] && {
-				DNS2SOCKS_FORWARD=$(config_t_get global dns2socks_forward 8.8.4.4)
-				nohup $dns2socks_bin 127.0.0.1:$SOCKS5_PROXY_PORT1 $DNS2SOCKS_FORWARD 127.0.0.1:$DNS_PORT >/dev/null 2>&1 &
-				echolog "DNS：dns2socks..."
-			}
-		else
-			echolog "DNS：dns2socks模式需要使用Socks5代理节点，请开启！"
-			force_stop
-		fi
-	;;
 	pdnsd)
 		pdnsd_bin=$(find_bin pdnsd)
 		[ -n "$pdnsd_bin" ] && {
@@ -680,19 +667,6 @@ start_dns() {
 						nohup $chinadns_ng_bin -l $DNS_PORT -c $UP_CHINA_DNS -t 127.0.0.1#$other_port $gfwlist_param $chnlist_param >/dev/null 2>&1 &
 						echolog "DNS：ChinaDNS-NG + pdnsd($DNS_FORWARD)，国内DNS：$UP_CHINA_DNS"
 					}
-				fi
-			elif [ "$up_trust_chinadns_ng_dns" == "dns2socks" ]; then
-				if [ -n "$SOCKS5_NODE1" -a "$SOCKS5_NODE1" != "nil" ]; then
-					dns2socks_bin=$(find_bin dns2socks)
-					[ -n "$dns2socks_bin" ] && {
-						DNS2SOCKS_FORWARD=$(config_t_get global dns2socks_forward 8.8.4.4)
-						nohup $dns2socks_bin 127.0.0.1:$SOCKS5_PROXY_PORT1 $DNS2SOCKS_FORWARD 127.0.0.1:$other_port >/dev/null 2>&1 &
-						nohup $chinadns_ng_bin -l $DNS_PORT -c $UP_CHINA_DNS -t 127.0.0.1#$other_port $gfwlist_param $chnlist_param >/dev/null 2>&1 &
-						echolog "DNS：ChinaDNS-NG + dns2socks($DNS2SOCKS_FORWARD)，国内DNS：$UP_CHINA_DNS"
-					}
-				else
-					echolog "DNS：dns2socks模式需要使用Socks5代理节点，请开启！"
-					force_stop
 				fi
 			else
 				use_udp_node_resolve_dns=1
@@ -1062,7 +1036,7 @@ stop() {
 	done
 	clean_log
 	source $APP_PATH/iptables.sh stop
-	kill_all brook dns2socks haproxy chinadns-ng v2ray-plugin
+	kill_all brook haproxy chinadns-ng v2ray-plugin
 	ps -w | grep -E "$CONFIG_TCP_FILE|$CONFIG_UDP_FILE|$CONFIG_SOCKS5_FILE" | grep -v "grep" | awk '{print $1}' | xargs kill -9 >/dev/null 2>&1 &
 	ps -w | grep -E "$CONFIG_PATH" | grep -v "grep" | awk '{print $1}' | xargs kill -9 >/dev/null 2>&1 &
 	rm -rf $TMP_DNSMASQ_PATH $CONFIG_PATH

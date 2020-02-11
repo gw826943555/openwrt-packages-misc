@@ -107,11 +107,6 @@ o = s:option(ListValue, "dns_mode", translate("DNS Mode"), translate(
                  "if has problem, please try another mode.<br />if you use no patterns are used, DNS of wan will be used by default as upstream of dnsmasq."))
 o.rmempty = false
 o:reset_values()
-if is_finded("chinadns-ng") then o:value("chinadns-ng", "ChinaDNS-NG") end
-if is_finded("dns2socks") then
-    o:value("dns2socks",
-            "dns2socks + " .. translate("Use Socks5 Node Resolve DNS"))
-end
 if is_installed("pdnsd") or is_installed("pdnsd-alt") or is_finded("pdnsd") then
     o:value("pdnsd", "pdnsd")
 end
@@ -122,14 +117,10 @@ o:value("nonuse", translate("No patterns are used"))
 o = s:option(Value, "up_trust_chinadns_ng_dns",
              translate("Upstream trust DNS Server for ChinaDNS-NG") .. "(UDP)",
              translate(
-                 "You can use other resolving DNS services as trusted DNS, Example: dns2socks, dns-forwarder... 127.0.0.1#5353<br />Only use two at most, english comma separation, If you do not fill in the # and the following port, you are using port 53."))
+                 "You can use other resolving DNS services as trusted DNS, Example: dns-forwarder... 127.0.0.1#5353<br />Only use two at most, english comma separation, If you do not fill in the # and the following port, you are using port 53."))
 o.default = "pdnsd"
 if is_installed("pdnsd") or is_installed("pdnsd-alt") or is_finded("pdnsd") then
     o:value("pdnsd", "pdnsd + " .. translate("Use TCP Node Resolve DNS"))
-end
-if is_finded("dns2socks") then
-    o:value("dns2socks",
-            "dns2socks + " .. translate("Use Socks5 Node Resolve DNS"))
 end
 o:value("8.8.4.4,8.8.8.8", "8.8.4.4, 8.8.8.8 (Google DNS)")
 o:value("208.67.222.222,208.67.220.220",
@@ -145,15 +136,6 @@ o:depends("dns_mode", "chinadns-ng")
     o:depends("dns_mode", "pdnsd")
 end
 --]]
-
-o = s:option(Value, "dns2socks_forward", translate("DNS Address"))
-o.default = "8.8.4.4"
-o:value("8.8.4.4", "8.8.4.4 (Google DNS)")
-o:value("8.8.8.8", "8.8.8.8 (Google DNS)")
-o:value("208.67.222.222", "208.67.222.222 (Open DNS)")
-o:value("208.67.220.220", "208.67.220.220 (Open DNS)")
-o:depends("dns_mode", "dns2socks")
-o:depends("up_trust_chinadns_ng_dns", "dns2socks")
 
 ---- DNS Forward
 o = s:option(Value, "dns_forward", translate("DNS Address"))
