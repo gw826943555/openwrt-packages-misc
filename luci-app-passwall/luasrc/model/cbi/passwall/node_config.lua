@@ -62,22 +62,7 @@ remarks.default = translate("Remarks")
 remarks.rmempty = false
 
 type = s:option(ListValue, "type", translate("Type"))
-if ((is_installed("redsocks2") or is_finded("redsocks2")) or
-    (is_installed("ipt2socks") or is_finded("ipt2socks"))) then
-    type:value("Socks5", translate("Socks5"))
-end
-if is_finded("ss-redir") then type:value("SS", translate("Shadowsocks")) end
 if is_finded("ssr-redir") then type:value("SSR", translate("ShadowsocksR")) end
-if is_installed("v2ray") or is_finded("v2ray") then
-    type:value("V2ray", translate("V2ray"))
-    type:value("V2ray_balancing", translate("V2ray Balancing"))
-end
-if is_installed("brook") or is_finded("brook") then
-    type:value("Brook", translate("Brook"))
-end
-if is_installed("trojan") or is_finded("trojan") then
-    type:value("Trojan", translate("Trojan"))
-end
 
 v2ray_protocol = s:option(ListValue, "v2ray_protocol",
                           translate("V2ray Protocol"))

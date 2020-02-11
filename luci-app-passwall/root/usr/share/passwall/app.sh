@@ -364,9 +364,6 @@ gen_start_config() {
 			local server_username=$(config_n_get $node username)
 			local server_password=$(config_n_get $node password)
 			eval port=\$UDP_REDIR_PORT$5
-			ipt2socks_bin=$(find_bin ipt2socks)
-			[ -f "$ipt2socks_bin" ] && $ipt2socks_bin -U -l $port -b 0.0.0.0 -s $node_address -p $node_port -R >/dev/null &
-			
 			#redsocks_bin=$(find_bin redsocks2)
 			#[ -n "$redsocks_bin" ] && {
 			#	local redsocks_config_file=$CONFIG_PATH/UDP_$i.conf
@@ -443,9 +440,6 @@ gen_start_config() {
 			local server_username=$(config_n_get $node username)
 			local server_password=$(config_n_get $node password)
 			eval port=\$TCP_REDIR_PORT$5
-			ipt2socks_bin=$(find_bin ipt2socks)
-			[ -f "$ipt2socks_bin" ] && $ipt2socks_bin -l $port -b 0.0.0.0 -s $node_address -p $socks5_port -R >/dev/null &
-			
 			#redsocks_bin=$(find_bin redsocks2)
 			#[ -n "$redsocks_bin" ] && {
 			#	local redsocks_config_file=$CONFIG_PATH/TCP_$i.conf
@@ -1068,7 +1062,7 @@ stop() {
 	done
 	clean_log
 	source $APP_PATH/iptables.sh stop
-	kill_all brook dns2socks haproxy chinadns-ng ipt2socks v2ray-plugin
+	kill_all brook dns2socks haproxy chinadns-ng v2ray-plugin
 	ps -w | grep -E "$CONFIG_TCP_FILE|$CONFIG_UDP_FILE|$CONFIG_SOCKS5_FILE" | grep -v "grep" | awk '{print $1}' | xargs kill -9 >/dev/null 2>&1 &
 	ps -w | grep -E "$CONFIG_PATH" | grep -v "grep" | awk '{print $1}' | xargs kill -9 >/dev/null 2>&1 &
 	rm -rf $TMP_DNSMASQ_PATH $CONFIG_PATH

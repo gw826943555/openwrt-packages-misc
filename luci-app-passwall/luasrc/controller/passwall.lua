@@ -97,7 +97,7 @@ function status()
                                     i, i))
         e["tcp_node%s_status" % i] = luci.sys.call(
                                          string.format(
-                                             "ps -w | grep -v grep | grep -i -E '%s/TCP_%s|brook tproxy -l 0.0.0.0:%s|ipt2socks -T -l %s' >/dev/null",
+                                             "ps -w | grep -v grep | grep -i -E '%s/TCP_%s|brook tproxy -l 0.0.0.0:%s' >/dev/null",
                                              appname, i, listen_port,
                                              listen_port)) == 0
     end
@@ -112,7 +112,7 @@ function status()
                                     i, i))
         e["udp_node%s_status" % i] = luci.sys.call(
                                          string.format(
-                                             "ps -w | grep -v grep | grep -i -E '%s/UDP_%s|brook tproxy -l 0.0.0.0:%s|ipt2socks -U -l %s' >/dev/null",
+                                             "ps -w | grep -v grep | grep -i -E '%s/UDP_%s|brook tproxy -l 0.0.0.0:%s' >/dev/null",
                                              appname, i, listen_port,
                                              listen_port)) == 0
     end

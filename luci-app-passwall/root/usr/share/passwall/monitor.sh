@@ -38,7 +38,7 @@ for i in $(seq 1 $TCP_NODE_NUM); do
 	eval tmp_node=\$TCP_NODE$i
 	if [ "$tmp_node" != "nil" ]; then
 		[ -f "/var/etc/passwall/port/TCP_$i" ] && listen_port=$(echo -n `cat /var/etc/passwall/port/TCP_$i`)
-		icount=$(ps -w | grep -v grep | grep -i -E "${CONFIG}/TCP_${i}|brook tproxy -l 0.0.0.0:${listen_port}|ipt2socks -T -l ${listen_port}" | wc -l)
+		icount=$(ps -w | grep -v grep | grep -i -E "${CONFIG}/TCP_${i}|brook tproxy -l 0.0.0.0:${listen_port}" | wc -l)
 		if [ $icount = 0 ]; then
 			/etc/init.d/passwall restart
 			exit 0
@@ -53,7 +53,7 @@ for i in $(seq 1 $UDP_NODE_NUM); do
 	if [ "$tmp_node" != "nil" ]; then
 		[ "$tmp_node" == "default" ] && tmp_node=$TCP_NODE1
 		[ -f "/var/etc/passwall/port/UDP_$i" ] && listen_port=$(echo -n `cat /var/etc/passwall/port/UDP_$i`)
-		icount=$(ps -w | grep -v grep | grep -i -E "${CONFIG}/UDP_${i}|brook tproxy -l 0.0.0.0:${listen_port}|ipt2socks -U -l ${listen_port}" | wc -l)
+		icount=$(ps -w | grep -v grep | grep -i -E "${CONFIG}/UDP_${i}|brook tproxy -l 0.0.0.0:${listen_port}" | wc -l)
 		if [ $icount = 0 ]; then
 			/etc/init.d/passwall restart
 			exit 0
