@@ -39,10 +39,6 @@ config PACKAGE_$(PKG_NAME)_INCLUDE_V2ray
 config PACKAGE_$(PKG_NAME)_INCLUDE_Brook
 	bool "Include Brook"
 	default n
-
-config PACKAGE_$(PKG_NAME)_INCLUDE_haproxy
-	bool "Include haproxy"
-	default n
 	
 config PACKAGE_$(PKG_NAME)_INCLUDE_pdnsd
 	bool "Include pdnsd"
@@ -64,7 +60,6 @@ define Package/$(PKG_NAME)
   +PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_socks:shadowsocksr-libev-ssr-local \
   +PACKAGE_$(PKG_NAME)_INCLUDE_V2ray:v2ray \
   +PACKAGE_$(PKG_NAME)_INCLUDE_Brook:brook \
-  +PACKAGE_$(PKG_NAME)_INCLUDE_haproxy:haproxy \
   +PACKAGE_$(PKG_NAME)_INCLUDE_pdnsd:pdnsd-alt
 endef
 

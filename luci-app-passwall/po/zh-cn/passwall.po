@@ -61,9 +61,6 @@ msgstr "节点列表"
 msgid "Other Settings"
 msgstr "高级设置"
 
-msgid "Load Balancing"
-msgstr "负载均衡"
-
 msgid "Enter interface"
 msgstr "进入界面"
 
@@ -175,9 +172,6 @@ msgstr "本机服务器的客户端也可以使用这个代理模式上网。<br
 msgid "Tips"
 msgstr "小提示"
 
-msgid "You can use load balancing for failover."
-msgstr "可以使用负载均衡实现故障切换功能。"
-
 msgid "dnsbyisp"
 msgstr "运营商DNS(自动分配)"
 
@@ -285,18 +279,6 @@ msgstr "添加方式"
 
 msgid "Type"
 msgstr "类型"
-
-msgid "V2ray Balancing"
-msgstr "V2ray 负载均衡"
-
-msgid "V2ray_balancing"
-msgstr "V2ray 负载均衡"
-
-msgid "Load balancing node list"
-msgstr "负载均衡节点列表"
-
-msgid "Load balancing node list, <a target='_blank' href='https://toutyrater.github.io/app/balance.html'>document</a>"
-msgstr "负载均衡节点列表，<a target='_blank' href='https://toutyrater.github.io/app/balance.html'>文档原理</a>"
 
 msgid "Address"
 msgstr "地址"
@@ -433,9 +415,6 @@ msgstr "备用节点的列表，第一个必须是主节点，其他是备用节
 msgid "Configure this node with 127.0.0.1: this port"
 msgstr "使用127.0.0.1和此端口配置节点"
 
-msgid "Enable Load Balancing"
-msgstr "开启负载均衡"
-
 msgid "Console Username"
 msgstr "控制台账号"
 
@@ -447,12 +426,6 @@ msgstr "控制台端口"
 
 msgid "In the browser input routing IP plus port access, such as:192.168.1.1:1188"
 msgstr "在浏览器输入路由IP加端口访问，如：192.168.1.1:1188"
-
-msgid "Haproxy Port"
-msgstr "负载均衡端口"
-
-msgid "Load Balancing Setting"
-msgstr "负载均衡设置"
 
 msgid "Add a node, Export Of Multi WAN Only support Multi Wan. Load specific gravity range 1-256. Multiple primary servers can be load balanced, standby will only be enabled when the primary server is offline!"
 msgstr "添加节点，指定出口功能是为多WAN用户准备的。负载比重范围1-256。多个主服务器可以负载均衡，备用只有在主服务器离线时才会启用！"

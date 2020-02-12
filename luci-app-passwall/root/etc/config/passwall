@@ -12,9 +12,6 @@ config global
 	option proxy_mode 'gfwlist'
 	option localhost_proxy_mode 'gfwlist'
 
-config global_haproxy
-	option balancing_enable '0'
-
 config global_delay
 	option auto_on '0'
 	option start_daemon '0'

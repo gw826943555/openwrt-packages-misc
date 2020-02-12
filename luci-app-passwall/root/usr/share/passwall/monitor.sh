@@ -31,7 +31,6 @@ for i in $(seq 1 $SOCKS5_NODE_NUM); do
 done
 
 dns_mode=$(config_t_get global dns_mode)
-use_haproxy=$(config_t_get global_haproxy balancing_enable 0)
 
 #tcp
 for i in $(seq 1 $TCP_NODE_NUM); do
