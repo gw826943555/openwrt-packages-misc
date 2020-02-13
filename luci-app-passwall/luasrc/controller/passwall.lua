@@ -2,7 +2,6 @@
 module("luci.controller.passwall", package.seeall)
 local appname = "passwall"
 local http = require "luci.http"
-local brook = require "luci.model.cbi.passwall.api.brook"
 local v2ray = require "luci.model.cbi.passwall.api.v2ray"
 
 function index()
@@ -55,10 +54,6 @@ function index()
     call("copy_node")).leaf = true
     entry({"admin", "vpn", "passwall", "update_rules"}, 
     call("update_rules")).leaf = true
-    entry({"admin", "vpn", "passwall", "brook_check"}, 
-    call("brook_check")).leaf = true
-    entry({"admin", "vpn", "passwall", "brook_update"}, 
-    call("brook_update")).leaf = true
     entry({"admin", "vpn", "passwall", "v2ray_check"}, 
     call("v2ray_check")).leaf = true
     entry({"admin", "vpn", "passwall", "v2ray_update"}, 
@@ -95,11 +90,7 @@ function status()
                                 string.format(
                                     "[ -f '/var/etc/passwall/port/TCP_%s' ] && echo -n `cat /var/etc/passwall/port/TCP_%s`",
                                     i, i))
-        e["tcp_node%s_status" % i] = luci.sys.call(
-                                         string.format(
-                                             "ps -w | grep -v grep | grep -i -E '%s/TCP_%s|brook tproxy -l 0.0.0.0:%s' >/dev/null",
-                                             appname, i, listen_port,
-                                             listen_port)) == 0
+        e["tcp_node%s_status" % i] = luci.sys.call(string.format("ps -w | grep -v grep | grep -i '%s/TCP_%s' >/dev/null", appname, i)) == 0
     end
 
     local udp_node_num = luci.sys.exec(
@@ -111,10 +102,7 @@ function status()
                                     "[ -f '/var/etc/passwall/port/UDP_%s' ] && echo -n `cat /var/etc/passwall/port/UDP_%s`",
                                     i, i))
         e["udp_node%s_status" % i] = luci.sys.call(
-                                         string.format(
-                                             "ps -w | grep -v grep | grep -i -E '%s/UDP_%s|brook tproxy -l 0.0.0.0:%s' >/dev/null",
-                                             appname, i, listen_port,
-                                             listen_port)) == 0
+                                         string.format("ps -w | grep -v grep | grep -i '%s/UDP_%s' >/dev/null", appname, i)) == 0
     end
 
     local socks5_node_num = luci.sys.exec(
@@ -126,9 +114,7 @@ function status()
                                     "[ -f '/var/etc/passwall/port/SOCKS5_%s' ] && echo -n `cat /var/etc/passwall/port/SOCKS5_%s`",
                                     i, i))
         e["socks5_node%s_status" % i] = luci.sys.call(
-                                            string.format(
-                                                "ps -w | grep -v grep | grep -i -E '%s/SOCKS5_%s|brook client -l 0.0.0.0:%s' >/dev/null",
-                                                appname, i, listen_port)) == 0
+                                            string.format("ps -w | grep -v grep | grep -i '%s/SOCKS5_%s' >/dev/null", appname, i)) == 0
     end
     luci.http.prepare_content("application/json")
     luci.http.write_json(e)
@@ -267,23 +253,6 @@ function update_rules()
     local update = luci.http.formvalue("update")
     luci.sys.call("nohup /usr/share/passwall/rule_update.sh '" .. update ..
                       "' 2>&1 &")
-end
-
-function brook_check()
-    local json = brook.to_check("")
-    http_write_json(json)
-end
-
-function brook_update()
-    local json = nil
-    local task = http.formvalue("task")
-    if task == "move" then
-        json = brook.to_move(http.formvalue("file"))
-    else
-        json = brook.to_download(http.formvalue("url"))
-    end
-
-    http_write_json(json)
 end
 
 function v2ray_check()

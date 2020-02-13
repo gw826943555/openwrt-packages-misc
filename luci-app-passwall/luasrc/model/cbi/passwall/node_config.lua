@@ -93,7 +93,6 @@ address:depends("type", "Socks5")
 address:depends("type", "SS")
 address:depends("type", "SSR")
 address:depends("type", "V2ray")
-address:depends("type", "Brook")
 
 use_ipv6 = s:option(Flag, "use_ipv6", translate("Use IPv6"))
 use_ipv6.default = 0
@@ -101,7 +100,6 @@ use_ipv6:depends("type", "Socks5")
 use_ipv6:depends("type", "SS")
 use_ipv6:depends("type", "SSR")
 use_ipv6:depends("type", "V2ray")
-use_ipv6:depends("type", "Brook")
 
 port = s:option(Value, "port", translate("Port"))
 port.datatype = "port"
@@ -110,7 +108,6 @@ port:depends("type", "Socks5")
 port:depends("type", "SS")
 port:depends("type", "SSR")
 port:depends("type", "V2ray")
-port:depends("type", "Brook")
 
 username = s:option(Value, "username", translate("Username"))
 username:depends("type", "Socks5")
@@ -120,7 +117,6 @@ password.password = true
 password:depends("type", "Socks5")
 password:depends("type", "SS")
 password:depends("type", "SSR")
-password:depends("type", "Brook")
 
 ss_encrypt_method = s:option(ListValue, "ss_encrypt_method",
                              translate("Encrypt Method"))
@@ -384,12 +380,6 @@ type.validate = function(self, value)
         --v2ray_protocol.rmempty = false
         v2ray_VMess_id.rmempty = false
         v2ray_VMess_alterId.rmempty = false
-    elseif value == "V2ray_balancing" then
-    elseif value == "Brook" then
-        address.rmempty = false
-        port.rmempty = false
-        password.rmempty = false
-    end
     return value
 end
 

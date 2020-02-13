@@ -291,102 +291,77 @@ add_firewall_rule() {
 				local TCP_NODE_IP=$(get_host_ip "ipv4" $address)
 				local TCP_NODE_TYPE=$(echo $(config_get $node type) | tr 'A-Z' 'a-z')
 				[ -n "$TCP_NODE_IP" -a -n "$TCP_NODE_PORT" ] && $iptables_nat -A PSW -p tcp -d $TCP_NODE_IP -m multiport --dports $TCP_NODE_PORT -j RETURN
-				if [ "$TCP_NODE_TYPE" == "brook" ]; then
-					$iptables_mangle -A PSW_ACL -p tcp -m socket -j MARK --set-mark 1
+				# 全局模式
+				$iptables_nat -A PSW_GLO$k -p tcp -j REDIRECT --to-ports $local_port
 
-					# $iptables_mangle -A PSW$k -p tcp $(dst $IPSET_BLACKLIST) -j TPROXY --tproxy-mark 0x1/0x1 --on-port $local_port
-					# 全局模式
-					$iptables_mangle -A PSW_GLO$k -p tcp -j TPROXY --tproxy-mark 0x1/0x1 --on-port $local_port
+				# GFWLIST模式
+				$iptables_nat -A PSW_GFW$k -p tcp $(dst $IPSET_ROUTER) -j REDIRECT --to-ports $local_port
+				$iptables_nat -A PSW_GFW$k -p tcp $(dst $IPSET_GFW) -j REDIRECT --to-ports $local_port
 
-					# GFWLIST模式
-					$iptables_mangle -A PSW_GFW$k -p tcp $(dst $IPSET_GFW) -j TPROXY --tproxy-mark 0x1/0x1 --on-port $local_port
+				# 大陆白名单模式
+				$iptables_nat -A PSW_CHN$k -p tcp $(dst $IPSET_CHN) -j RETURN
+				#$iptables_nat -A PSW_CHN$k -p tcp -m geoip ! --destination-country CN -j REDIRECT --to-ports $local_port
+				$iptables_nat -A PSW_CHN$k -p tcp -j REDIRECT --to-ports $local_port
 
-					# 大陆白名单模式
-					$iptables_mangle -A PSW_CHN$k -p tcp $(dst $IPSET_CHN) -j RETURN
-					$iptables_mangle -A PSW_CHN$k -p tcp -j TPROXY --tproxy-mark 0x1/0x1 --on-port $local_port
+				# 回国模式
+				#$iptables_nat -A PSW_HOME$k -p tcp -m geoip --destination-country CN -j REDIRECT --to-ports $local_port
+				$iptables_nat -A PSW_HOME$k -p tcp $(dst $IPSET_CHN) -j REDIRECT --to-ports $local_port
 
-					# 回国模式
-					$iptables_mangle -A PSW_HOME$k -p tcp $(dst $IPSET_CHN) -j TPROXY --tproxy-mark 0x1/0x1 --on-port $local_port
+				# 游戏模式
+				$iptables_nat -A PSW_GAME$k -p tcp $(dst $IPSET_CHN) -j RETURN
 
-					# 游戏模式
-					$iptables_mangle -A PSW_GAME$k -p tcp $(dst $IPSET_CHN) -j RETURN
-
-					# 用于本机流量转发，默认只走router
-					$iptables_mangle -A PSW -s $lan_ip -p tcp $(dst $IPSET_ROUTER) -j TPROXY --tproxy-mark 0x1/0x1 --on-port $local_port
-					$iptables_mangle -A PSW_OUTPUT -p tcp -m multiport --dport $TCP_REDIR_PORTS $(dst $IPSET_ROUTER) -j MARK --set-mark 1
-				else
-					# 全局模式
-					$iptables_nat -A PSW_GLO$k -p tcp -j REDIRECT --to-ports $local_port
-
-					# GFWLIST模式
-					$iptables_nat -A PSW_GFW$k -p tcp $(dst $IPSET_ROUTER) -j REDIRECT --to-ports $local_port
-					$iptables_nat -A PSW_GFW$k -p tcp $(dst $IPSET_GFW) -j REDIRECT --to-ports $local_port
-
-					# 大陆白名单模式
-					$iptables_nat -A PSW_CHN$k -p tcp $(dst $IPSET_CHN) -j RETURN
-					#$iptables_nat -A PSW_CHN$k -p tcp -m geoip ! --destination-country CN -j REDIRECT --to-ports $local_port
-					$iptables_nat -A PSW_CHN$k -p tcp -j REDIRECT --to-ports $local_port
-
-					# 回国模式
-					#$iptables_nat -A PSW_HOME$k -p tcp -m geoip --destination-country CN -j REDIRECT --to-ports $local_port
-					$iptables_nat -A PSW_HOME$k -p tcp $(dst $IPSET_CHN) -j REDIRECT --to-ports $local_port
-
-					# 游戏模式
-					$iptables_nat -A PSW_GAME$k -p tcp $(dst $IPSET_CHN) -j RETURN
-
-					[ "$k" == 1 ] && {
-						[ "$use_tcp_node_resolve_dns" == 1 -a -n "$DNS_FORWARD" ] && {
-							for dns in $DNS_FORWARD
-							do
-								local dns_ip=$(echo $dns | awk -F "#" '{print $1}')
-								local dns_port=$(echo $dns | awk -F "#" '{print $2}')
-								[ -z "$dns_port" ] && dns_port=53
-								$iptables_nat -I PSW 2 -p tcp -d $dns_ip --dport $dns_port -j REDIRECT --to-ports $local_port
-							done
-						}
-						
-						PRE_INDEX=1
-						KP_INDEX=$($iptables_nat -L PREROUTING --line-numbers | grep "KOOLPROXY" | sed -n '$p' | awk '{print $1}')
-						ADBYBY_INDEX=$($iptables_nat -L PREROUTING --line-numbers | grep "ADBYBY" | sed -n '$p' | awk '{print $1}')
-						if [ -n "$KP_INDEX" -a -z "$ADBYBY_INDEX" ]; then
-							PRE_INDEX=$(expr $KP_INDEX + 1)
-						elif [ -z "$KP_INDEX" -a -n "$ADBYBY_INDEX" ]; then
-							PRE_INDEX=$(expr $ADBYBY_INDEX + 1)
-						elif [ -z "$KP_INDEX" -a -z "$ADBYBY_INDEX" ]; then
-							PR_INDEX=$($iptables_nat -L PREROUTING --line-numbers | grep "prerouting_rule" | sed -n '$p' | awk '{print $1}')
-							[ -n "$PR_INDEX" ] && {
-								PRE_INDEX=$(expr $PR_INDEX + 1)
-							}
-						fi
-						$iptables_nat -I PREROUTING $PRE_INDEX -j PSW
-						
-						# 用于本机流量转发
-						$iptables_nat -A OUTPUT -j PSW_OUTPUT
-						$iptables_nat -A PSW_OUTPUT $(dst $IPSET_LANIPLIST) -j RETURN
-						[ "$use_tcp_node_resolve_dns" == 1 -a -n "$DNS_FORWARD" ] && {
-							for dns in $DNS_FORWARD
-							do
-								local dns_ip=$(echo $dns | awk -F "#" '{print $1}')
-								local dns_port=$(echo $dns | awk -F "#" '{print $2}')
-								[ -z "$dns_port" ] && dns_port=53
-								$iptables_nat -A PSW_OUTPUT -p tcp -d $dns_ip --dport $dns_port -j REDIRECT --to-ports $TCP_REDIR_PORT1
-							done
-						}
-						$iptables_nat -A PSW_OUTPUT $(dst $IPSET_VPSIPLIST) -j RETURN
-						$iptables_nat -A PSW_OUTPUT $(dst $IPSET_WHITELIST) -j RETURN
-						$iptables_nat -A PSW_OUTPUT -p tcp -m multiport --dport $TCP_REDIR_PORTS $(dst $IPSET_ROUTER) -j REDIRECT --to-ports $TCP_REDIR_PORT1
-						$iptables_nat -A PSW_OUTPUT -p tcp -m multiport --dport $TCP_REDIR_PORTS $(dst $IPSET_BLACKLIST) -j REDIRECT --to-ports $TCP_REDIR_PORT1
-
-						[ "$LOCALHOST_PROXY_MODE" == "global" ] && $iptables_nat -A PSW_OUTPUT -p tcp -m multiport --dport $TCP_REDIR_PORTS -j REDIRECT --to-ports $TCP_REDIR_PORT1
-						[ "$LOCALHOST_PROXY_MODE" == "gfwlist" ] && $iptables_nat -A PSW_OUTPUT -p tcp -m multiport --dport $TCP_REDIR_PORTS $(dst $IPSET_GFW) -j REDIRECT --to-ports $TCP_REDIR_PORT1
-						[ "$LOCALHOST_PROXY_MODE" == "chnroute" ] && {
-							$iptables_nat -A PSW_OUTPUT -p tcp -m multiport --dport $TCP_REDIR_PORTS -m set ! --match-set $IPSET_CHN dst -j REDIRECT --to-ports $TCP_REDIR_PORT1
-						}
+				[ "$k" == 1 ] && {
+					[ "$use_tcp_node_resolve_dns" == 1 -a -n "$DNS_FORWARD" ] && {
+						for dns in $DNS_FORWARD
+						do
+							local dns_ip=$(echo $dns | awk -F "#" '{print $1}')
+							local dns_port=$(echo $dns | awk -F "#" '{print $2}')
+							[ -z "$dns_port" ] && dns_port=53
+							$iptables_nat -I PSW 2 -p tcp -d $dns_ip --dport $dns_port -j REDIRECT --to-ports $local_port
+						done
 					}
-					# 重定所有流量到透明代理端口
-					# $iptables_nat -A PSW -p tcp -m ttl --ttl-eq $ttl -j REDIRECT --to $local_port
-					echolog "IPv4 防火墙TCP转发规则加载完成！"
-				fi
+					
+					PRE_INDEX=1
+					KP_INDEX=$($iptables_nat -L PREROUTING --line-numbers | grep "KOOLPROXY" | sed -n '$p' | awk '{print $1}')
+					ADBYBY_INDEX=$($iptables_nat -L PREROUTING --line-numbers | grep "ADBYBY" | sed -n '$p' | awk '{print $1}')
+					if [ -n "$KP_INDEX" -a -z "$ADBYBY_INDEX" ]; then
+						PRE_INDEX=$(expr $KP_INDEX + 1)
+					elif [ -z "$KP_INDEX" -a -n "$ADBYBY_INDEX" ]; then
+						PRE_INDEX=$(expr $ADBYBY_INDEX + 1)
+					elif [ -z "$KP_INDEX" -a -z "$ADBYBY_INDEX" ]; then
+						PR_INDEX=$($iptables_nat -L PREROUTING --line-numbers | grep "prerouting_rule" | sed -n '$p' | awk '{print $1}')
+						[ -n "$PR_INDEX" ] && {
+							PRE_INDEX=$(expr $PR_INDEX + 1)
+						}
+					fi
+					$iptables_nat -I PREROUTING $PRE_INDEX -j PSW
+					
+					# 用于本机流量转发
+					$iptables_nat -A OUTPUT -j PSW_OUTPUT
+					$iptables_nat -A PSW_OUTPUT $(dst $IPSET_LANIPLIST) -j RETURN
+					[ "$use_tcp_node_resolve_dns" == 1 -a -n "$DNS_FORWARD" ] && {
+						for dns in $DNS_FORWARD
+						do
+							local dns_ip=$(echo $dns | awk -F "#" '{print $1}')
+							local dns_port=$(echo $dns | awk -F "#" '{print $2}')
+							[ -z "$dns_port" ] && dns_port=53
+							$iptables_nat -A PSW_OUTPUT -p tcp -d $dns_ip --dport $dns_port -j REDIRECT --to-ports $TCP_REDIR_PORT1
+						done
+					}
+					$iptables_nat -A PSW_OUTPUT $(dst $IPSET_VPSIPLIST) -j RETURN
+					$iptables_nat -A PSW_OUTPUT $(dst $IPSET_WHITELIST) -j RETURN
+					$iptables_nat -A PSW_OUTPUT -p tcp -m multiport --dport $TCP_REDIR_PORTS $(dst $IPSET_ROUTER) -j REDIRECT --to-ports $TCP_REDIR_PORT1
+					$iptables_nat -A PSW_OUTPUT -p tcp -m multiport --dport $TCP_REDIR_PORTS $(dst $IPSET_BLACKLIST) -j REDIRECT --to-ports $TCP_REDIR_PORT1
+
+					[ "$LOCALHOST_PROXY_MODE" == "global" ] && $iptables_nat -A PSW_OUTPUT -p tcp -m multiport --dport $TCP_REDIR_PORTS -j REDIRECT --to-ports $TCP_REDIR_PORT1
+					[ "$LOCALHOST_PROXY_MODE" == "gfwlist" ] && $iptables_nat -A PSW_OUTPUT -p tcp -m multiport --dport $TCP_REDIR_PORTS $(dst $IPSET_GFW) -j REDIRECT --to-ports $TCP_REDIR_PORT1
+					[ "$LOCALHOST_PROXY_MODE" == "chnroute" ] && {
+						$iptables_nat -A PSW_OUTPUT -p tcp -m multiport --dport $TCP_REDIR_PORTS -m set ! --match-set $IPSET_CHN dst -j REDIRECT --to-ports $TCP_REDIR_PORT1
+					}
+				}
+				# 重定所有流量到透明代理端口
+				# $iptables_nat -A PSW -p tcp -m ttl --ttl-eq $ttl -j REDIRECT --to $local_port
+				echolog "IPv4 防火墙TCP转发规则加载完成！"
 				if [ "$PROXY_IPV6" == "1" ]; then
 					lan_ipv6=$(ip address show br-lan | grep -w "inet6" | awk '{print $2}') #当前LAN IPv6段
 					$ip6tables_nat -N PSW
@@ -426,7 +401,6 @@ add_firewall_rule() {
 				local UDP_NODE_IP=$(get_host_ip "ipv4" $address)
 				local UDP_NODE_TYPE=$(echo $(config_get $node type) | tr 'A-Z' 'a-z')
 				[ -n "$UDP_NODE_IP" -a -n "$UDP_NODE_PORT" ] && $iptables_mangle -A PSW -p udp -d $UDP_NODE_IP -m multiport --dports $UDP_NODE_PORT -j RETURN
-				[ "$UDP_NODE_TYPE" == "brook" ] && $iptables_mangle -A PSW_ACL -p udp -m socket -j MARK --set-mark 1
 				#  全局模式
 				$iptables_mangle -A PSW_GLO$k -p udp -j TPROXY --tproxy-mark 0x1/0x1 --on-port $local_port
 

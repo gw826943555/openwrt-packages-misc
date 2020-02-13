@@ -171,9 +171,6 @@ TCP_NODE1_TYPE=""
 UDP_NODE1_TYPE=""
 SOCKS5_NODE1_TYPE=""
 
-BROOK_SOCKS5_CMD=""
-BROOK_TCP_CMD=""
-BROOK_UDP_CMD=""
 TCP_REDIR_PORTS=$(config_t_get global_forwarding tcp_redir_ports '80,443')
 UDP_REDIR_PORTS=$(config_t_get global_forwarding udp_redir_ports '1:65535')
 PROXY_MODE=$(config_t_get global proxy_mode chnroute)
@@ -315,14 +312,6 @@ gen_start_config() {
 				${v2ray_path}/v2ray -config=$config_file >/dev/null &
 			else
 				echolog "找不到V2ray客户端主程序，无法启用！"
-			fi
-		elif [ "$type" == "brook" ]; then
-			BROOK_SOCKS5_CMD="client -l 0.0.0.0:$local_port -i 0.0.0.0 -s $server_ip:$port -p $(config_n_get $node password)"
-			brook_bin=$(config_t_get global_app brook_file $(find_bin brook))
-			if [ -f "$brook_bin" ]; then
-				$brook_bin $BROOK_SOCKS5_CMD &>/dev/null &
-			else
-				echolog "找不到Brook客户端主程序，无法启用！"
 			fi
 		elif [ "$type" == "ssr" ]; then
 			gen_ss_ssr_config_file ssr $local_port $node $config_file
@@ -496,14 +485,6 @@ gen_start_config() {
 						$ss_bin -c $config_file -f $RUN_PID_PATH/tcp_ss_${k}_${5} $plugin_params >/dev/null 2>&1 &
 					done
 				}
-			elif [ "$type" == "brook" ]; then
-				BROOK_TCP_CMD="tproxy -l 0.0.0.0:$local_port -s $server_ip:$port -p $(config_n_get $node password)"
-				brook_bin=$(config_t_get global_app brook_file $(find_bin brook))
-				if [ -f "$brook_bin" ]; then
-					$brook_bin $BROOK_TCP_CMD &>/dev/null &
-				else
-					echolog "找不到Brook客户端主程序，无法启用！"
-				fi
 			fi
 		fi
 	fi
@@ -889,7 +870,7 @@ stop() {
 	done
 	clean_log
 	source $APP_PATH/iptables.sh stop
-	kill_all brook haproxy chinadns-ng v2ray-plugin
+	kill_all v2ray-plugin
 	ps -w | grep -E "$CONFIG_TCP_FILE|$CONFIG_UDP_FILE|$CONFIG_SOCKS5_FILE" | grep -v "grep" | awk '{print $1}' | xargs kill -9 >/dev/null 2>&1 &
 	ps -w | grep -E "$CONFIG_PATH" | grep -v "grep" | awk '{print $1}' | xargs kill -9 >/dev/null 2>&1 &
 	rm -rf $TMP_DNSMASQ_PATH $CONFIG_PATH
