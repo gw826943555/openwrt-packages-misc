@@ -380,6 +380,7 @@ type.validate = function(self, value)
         --v2ray_protocol.rmempty = false
         v2ray_VMess_id.rmempty = false
         v2ray_VMess_alterId.rmempty = false
+    end
     return value
 end
 
