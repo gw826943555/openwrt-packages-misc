@@ -258,7 +258,7 @@ start_pdnsd() {
 		purge_cache=off;
 		}
 	EOF
-	/usr/sbin/pdnsd -c /var/etc/pdnsd.conf -d
+	/usr/sbin/pdnsd -c /var/etc/pdnsd.conf -d >/dev/null 2>&1 &
 }
 
 start_redir() {
