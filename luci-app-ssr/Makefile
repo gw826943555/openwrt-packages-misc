@@ -95,8 +95,7 @@ endef
 
 define Package/$(PKG_NAME)/postrm
 #!/bin/sh
-rm -rf /etc/china_ssr.txt /etc/dnsmasq.ssr /etc/dnsmasq.oversea /etc/config/shadowsocksr /etc/config/black.list \
-		/etc/config/gfw.list /etc/config/white.list >/dev/null 2>&1
+rm -rf /etc/config/ssr /etc/config/whitedomains.list /etc/config/blackdomains.list /etc/config/whiteips.list /etc/config/blackips.list >/dev/null 2>&1
 exit 0
 endef
 
