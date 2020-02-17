@@ -73,3 +73,13 @@ start() {
 stop() {
 	killall -q -9 ssr-redir
 }
+
+boot() {
+	start
+}
+
+restart() {
+	stop
+	start
+}
+

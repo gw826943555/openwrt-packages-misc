@@ -25,8 +25,7 @@ define Package/$(PKG_NAME)
 	TITLE:=ShadowsocksR LuCI interface
 	PKGARCH:=all
 	DEPENDS:=+shadowsocksr-libev-alt +ipset +ip-full +iptables-mod-tproxy +dnsmasq-full +coreutils +coreutils-base64 +pdnsd-alt +wget +lua \
-	+PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_Server:shadowsocksr-libev-server \
-	+PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_Socks:srelay
+	+PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_Server:shadowsocksr-libev-server
 endef
 
 define Build/Prepare

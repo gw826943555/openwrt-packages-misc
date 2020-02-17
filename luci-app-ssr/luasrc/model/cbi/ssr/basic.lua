@@ -50,10 +50,10 @@ local obfs = {
 	"tls1.2_ticket_fastauth",
 }
 
-m = Map("ssr", translate("ShadowSocksR Plus+ Settings"))
+m = Map("ssr", translate("ShadowSocksR Settings"))
 
 -- [[ Basic Settings ]]--
-s = m:section(TypedSection, "shadowsocksr", translate("Server Setting"))
+s = m:section(TypedSection, "shadowsocksr", translate("Server Settings"))
 s.anonymous = true
 
 o = s:option(Flag, "enabled", translate("Enable"))
@@ -103,4 +103,5 @@ o = s:option(Value, "local_port", translate("Local Server Port"))
 o.datatype = "range(1,65535)"
 o.optional = false
 o.rmempty = false
+
 return m
