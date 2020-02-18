@@ -24,7 +24,7 @@ define Package/$(PKG_NAME)
 	SUBMENU:=3. Applications
 	TITLE:=ShadowsocksR LuCI interface
 	PKGARCH:=all
-	DEPENDS:=+shadowsocksr-libev-alt +ipset +ip-full +iptables-mod-tproxy +dnsmasq-full +coreutils +coreutils-base64 +pdnsd-alt +wget +lua \
+	DEPENDS:=+luci-compat +shadowsocksr-libev-alt +ipset +ip-full +iptables-mod-tproxy +dnsmasq-full +coreutils +coreutils-base64 +pdnsd-alt +wget +lua \
 	+PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_Server:shadowsocksr-libev-server
 endef
 
@@ -86,15 +86,15 @@ endef
 define Package/$(PKG_NAME)/prerm
 #!/bin/sh
 if [ -z "$${IPKG_INSTROOT}" ]; then
-	/etc/init.d/shadowsocksr disable
-	/etc/init.d/shadowsocksr stop
+	/etc/init.d/ssr disable
+	/etc/init.d/ssr stop
 fi
 exit 0
 endef
 
 define Package/$(PKG_NAME)/postrm
 #!/bin/sh
-rm -rf /etc/config/ssr /etc/config/whitedomains.list /etc/config/blackdomains.list /etc/config/whiteips.list /etc/config/blackips.list >/dev/null 2>&1
+rm -rf /etc/init.d/ssr /etc/config/ssr /etc/config/whitedomains.list /etc/config/blackdomains.list /etc/config/whiteips.list /etc/config/blackips.list >/dev/null 2>&1
 exit 0
 endef
 

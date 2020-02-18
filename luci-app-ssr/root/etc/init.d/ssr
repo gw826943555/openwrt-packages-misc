@@ -1,81 +1,18 @@
 #!/bin/sh /etc/rc.common
-#
-# Copyright (C) 2017 openwrt-ssr
-# Copyright (C) 2017 yushi studio <ywb94@qq.com>
-# Copyright (C) 2018 lean <coolsnowwolf@gmail.com>
-# Copyright (C) 2018 william <gw826943555@gmail.com>
-# This is free software, licensed under the GNU General Public License v3.
-# See /LICENSE for more information.
-#
 
-NAME=ssr
-START=50
-STOP=10
+START=99
+STOP=15
 
-LOG_FILE=/tmp/ssr.log
-SSR_CONF=/var/etc/ssr.json
-
-_log() {
-	echo "$(date "+%Y-%m-%d %H:%M:%S") $1" >> $LOG_FILE
-}
-
-ssr_validate() {
-	uci_load_validate "$NAME" shadowsocksr "$1" "$2" \
-		'enabled:bool:0' \
-		'remote_server:string' \
-		'remote_port:uinteger' \
-		'method:string' \
-		'password:string' \
-		'protocol:string' \
-		'protocol_param:string' \
-		'obfs:string' \
-		'obfs_param:string' \
-		'reuse_port:bool:1' \
-		'fast_open:bool:0' \
-		'local_server:string' \
-		'local_port:uinteger'
-}
-
-ssr_start() {
-	local section="$1"
-
-	[ "$enabled" = "1" ] || { _log "ShadowsocksR is not enabled."; return 1}
-
-	hostip=$(ping $remote_server -s 1 -c 1 | grep PING | cut -d'(' -f 2 | cut -d')' -f1)
-	_log "hostip:$hostip"
-
-	cat <<-EOF >$SSR_CONF
-		{
-		"server": "$hostip",
-		"server_port": $remote_port,
-		"local_address": "$local_server",
-		"local_port": $local_port,
-		"password": "$password",
-		"timeout": 60,
-		"method": "$method",
-		"protocol": "$protocol",
-		"protocol_param": "$protocol_param",
-		"obfs": "$obfs",
-		"obfs_param": "$obfs_param",
-		"reuse_port": true,
-		"fast_open": $fast_open
-		}
-	EOF
-	sleep 1
-#	/usr/bin/ssr-redir -c $SSR_CONF -f /var/run/ssr-retcp.pid >/dev/null 2>&1
+boot() {
+	/usr/share/ssr/ssr.sh boot
 }
 
 start() {
-	config_load "$NAME"
-	config_foreach ssr_validate "shadowsocksr" ssr_start 
+	/usr/share/ssr/ssr.sh start
 }
 
 stop() {
-	killall -q -9 ssr-redir
-}
-
-boot() {
-	start
+	/usr/share/ssr/ssr.sh stop
 }
 
 restart() {
