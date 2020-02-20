@@ -1,6 +1,3 @@
 [submodule "luci-app-diskman"]
 	path = luci-app-diskman
 	url = https://github.com/lisaac/luci-app-diskman
-[submodule "luci-app-v2ray"]
-	path = luci-app-v2ray
-	url = https://github.com/kuoruan/luci-app-v2ray
