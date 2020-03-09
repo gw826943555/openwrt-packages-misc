@@ -1,8 +1,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-ssr-plus
-PKG_VERSION:=163
-PKG_RELEASE:=6
+PKG_VERSION:=165
+PKG_RELEASE:=2
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -39,11 +39,11 @@ config PACKAGE_$(PKG_NAME)_INCLUDE_Kcptun
 
 config PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_Server
 	bool "Include ShadowsocksR Server"
-	default y if x86_64
+	default y if x86||x86_64||arm||aarch64
 	
 config PACKAGE_$(PKG_NAME)_INCLUDE_DNS2SOCKS
 	bool "Include DNS2SOCKS"
-	default y if x86_64
+	default y if x86||x86_64||arm||aarch64
 endef
 
 define Package/$(PKG_NAME)
