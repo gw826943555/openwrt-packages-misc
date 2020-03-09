@@ -39,11 +39,11 @@ config PACKAGE_$(PKG_NAME)_INCLUDE_Kcptun
 
 config PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_Server
 	bool "Include ShadowsocksR Server"
-	default y if x86||x86_64||arm||aarch64
+	default y if x86_64
 	
 config PACKAGE_$(PKG_NAME)_INCLUDE_DNS2SOCKS
 	bool "Include DNS2SOCKS"
-	default y if x86||x86_64||arm||aarch64
+	default y if x86_64
 endef
 
 define Package/$(PKG_NAME)

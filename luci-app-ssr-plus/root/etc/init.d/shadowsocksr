@@ -251,7 +251,7 @@ start_pdnsd() {
 		purge_cache=off;
 		}
 	EOF
-	(/usr/sbin/pdnsd -c /var/etc/pdnsd.conf -d >/dev/null 2>&1 &)
+	/usr/sbin/pdnsd -c /var/etc/pdnsd.conf -d &
 }
 
 start_redir() {
@@ -372,9 +372,9 @@ start_redir() {
 	fi
 	#deal with dns
 	local ssr_dns="$(uci_get_by_type global pdnsd_enable 0)"
-		local dnsstr="$(uci_get_by_type global tunnel_forward 8.8.4.4:53)"
-		local dnsserver=$(echo "$dnsstr" | awk -F ':' '{print $1}')
-		local dnsport=$(echo "$dnsstr" | awk -F ':' '{print $2}')
+	local dnsstr="$(uci_get_by_type global tunnel_forward 8.8.4.4:53)"
+	local dnsserver=$(echo "$dnsstr" | awk -F ':' '{print $1}')
+	local dnsport=$(echo "$dnsstr" | awk -F ':' '{print $2}')
 	if [ "$ssr_dns" == "1" ]; then
 		if [ "$run_mode" == "gfw" ]; then
 			ipset add gfwlist $dnsserver 2>/dev/null
@@ -431,9 +431,9 @@ start_service() {
 	let server_count=server_count+1
 	if [ "$server_count" == "1" ]; then
     if ! (iptables-save -t filter | grep SSR-SERVER-RULE >/dev/null); then
-		iptables -N SSR-SERVER-RULE && \
-		iptables -t filter -I INPUT -j SSR-SERVER-RULE
-	fi
+      iptables -N SSR-SERVER-RULE && \
+      iptables -t filter -I INPUT -j SSR-SERVER-RULE
+		fi
 	fi
 	gen_service_file $1 /var/etc/${NAME}_$server_count.json
 	/usr/bin/ssr-server -c /var/etc/${NAME}_$server_count.json -u -f /var/run/ssr-server$server_count.pid >/dev/null 2>&1
