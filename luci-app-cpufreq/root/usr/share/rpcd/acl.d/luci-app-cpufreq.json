@@ -1,5 +1,5 @@
 {
-	"luci-app-ssr-plus": {
+	"luci-app-cpufreq": {
     "description": "Grant UCI access for luci-app-cpufreq",
 	"read": {
 		"uci": [ "cpufreq" ]

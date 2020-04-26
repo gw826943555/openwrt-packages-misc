@@ -1,5 +1,5 @@
 {
-	"luci-app-ssr-plus": {
+	"luci-app-vlmcsd": {
     "description": "Grant UCI access for luci-app-vlmcsd",
 	"read": {
 		"uci": [ "vlmcsd" ]

@@ -1,5 +1,5 @@
 {
-	"luci-app-ssr-plus": {
+	"luci-app-baidupcs-web": {
     "description": "Grant UCI access for luci-app-baidupcs-web",
 	"read": {
 		"uci": [ "baidupcs-web" ]
