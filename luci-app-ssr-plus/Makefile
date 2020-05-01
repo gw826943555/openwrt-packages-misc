@@ -54,14 +54,10 @@ define Package/$(PKG_NAME)
 	PKGARCH:=all
 	DEPENDS:=+shadowsocksr-libev-alt +ipset +ip-full +iptables-mod-tproxy +dnsmasq-full +coreutils +coreutils-base64 +pdnsd-alt +wget +lua +microsocks +ipt2socks \
 	+PACKAGE_$(PKG_NAME)_INCLUDE_Shadowsocks:shadowsocks-libev-ss-redir \
-	+PACKAGE_$(PKG_NAME)_INCLUDE_Simple_obfs:simple-obfs \
-	+PACKAGE_$(PKG_NAME)_INCLUDE_V2ray_plugin:v2ray-plugin \
 	+PACKAGE_$(PKG_NAME)_INCLUDE_V2ray:v2ray \
 	+PACKAGE_$(PKG_NAME)_INCLUDE_Trojan:trojan \
-	+PACKAGE_$(PKG_NAME)_INCLUDE_Redsocks2:redsocks2 \
 	+PACKAGE_$(PKG_NAME)_INCLUDE_Kcptun:kcptun-client \
-	+PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_Server:shadowsocksr-libev-server \
-	+PACKAGE_$(PKG_NAME)_INCLUDE_DNS2SOCKS:dns2socks
+	+PACKAGE_$(PKG_NAME)_INCLUDE_ShadowsocksR_Server:shadowsocksr-libev-server
 endef
 
 define Build/Prepare
