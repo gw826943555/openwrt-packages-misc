@@ -1,0 +1,15 @@
+{
+    "luci-app-netdata": {
+            "description": "Grant access to LuCI app netdata",
+            "read": {
+                    "file": {
+                            "/etc/netdata/netdata.conf": ["read"]
+                    }
+            },
+            "write": {
+                    "file": {
+                            "/etc/netdata/netdata.conf": ["write"]
+                    }
+            }
+    }
+}
