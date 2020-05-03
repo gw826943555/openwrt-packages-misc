@@ -1,222 +1,323 @@
-msgid "NAS"
-msgstr "网络存储"
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
 
-msgid ". and .. are excluded."
-msgstr ". 和 .. 将被忽略。"
-
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:247
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:253
 msgid "0 means no limitation"
 msgstr "0 表明不限制"
 
-msgid "A message will be displayed when entering a directory."
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:160
+msgid "A message will be displayed when entering a directory"
 msgstr "在进入一个新目录时将显示的消息"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:220
 msgid "ASCII mode"
 msgstr "ASCII 模式"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:337
+msgid "Add New Virtual User"
+msgstr "创建新的虚拟用户"
+
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:141
 msgid "Allow directory recursely list"
-msgstr "允许递归列目录"
+msgstr "允许目录递归显示"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:386
 msgid "An actual local user to handle anonymous user"
-msgstr "承载匿名用户的本地用户"
+msgstr "用于承载匿名用户的真实本地用户"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:322
 msgid "An actual local user to handle virtual users"
-msgstr "承载虚拟用户的本地用户"
+msgstr "用于承载虚拟用户的真实本地用户"
 
-msgid "Anonymous Settings"
-msgstr "匿名用户设置"
-
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:468
 msgid "Anonymous User"
 msgstr "匿名用户"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:224
 msgid "Both download and upload"
-msgstr "下载和上传"
+msgstr "允许上传和下载"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:259
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:279
+msgid "Bytes/s, 0 means no limitation"
+msgstr "字节/秒, 0 表示无限制"
+
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:265
 msgid "Can not be zero, default is 3"
-msgstr "不能为 0，默认为 3"
+msgstr "不能为 0， 默认值为 3"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:464
 msgid "Connection Settings"
 msgstr "连接设置"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:234
 msgid "Connection timeout"
 msgstr "连接超时"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:100
 msgid "Data Port"
 msgstr "数据端口"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:240
 msgid "Data connection timeout"
 msgstr "数据连接超时"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:163
 msgid "Directory message filename"
-msgstr "目录消息文件名"
+msgstr ""
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:221
+msgid "Disabled"
+msgstr "禁用"
+
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:222
 msgid "Download only"
 msgstr "仅下载"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:54
+msgid "Enable FTP server"
+msgstr "启用FTP服务"
+
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:79
 msgid "Enable IPv4"
-msgstr "启用 IPv4"
+msgstr "启用IPv4"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:88
 msgid "Enable IPv6"
-msgstr "启用 IPv6"
+msgstr "启用IPv6"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:206
 msgid "Enable PASV mode"
-msgstr "启用 PASV 模式"
+msgstr "启用PASV（被动）模式"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:205
 msgid "Enable PORT mode"
-msgstr "启用 PORT 模式"
+msgstr "启用PORT（主动）模式"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:379
+msgid "Enable anonymous user"
+msgstr "启用匿名用户"
+
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:134
 msgid "Enable directory list"
-msgstr "允许列目录"
+msgstr "启用目录列表"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:159
 msgid "Enable directory message"
-msgstr "启用目录消息"
+msgstr "启用目录信息"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:127
 msgid "Enable download"
 msgstr "允许下载"
 
-msgid "Enable file log"
-msgstr "启用文件日志"
-
-msgid "Enable local user"
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:182
+msgid "Enable local users"
 msgstr "启用本地用户"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:411
+msgid "Enable logging"
+msgstr "启用日志"
+
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:296
 msgid "Enable other rights"
 msgstr "允许其它权限"
 
-msgid "Enable syslog"
-msgstr "启用系统日志"
-
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:290
 msgid "Enable upload"
 msgstr "允许上传"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:318
+msgid "Enable virtual users"
+msgstr "启用虚拟用户"
+
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:120
 msgid "Enable write"
-msgstr "允许写"
+msgstr "允许写入"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:284
 msgid "Enable write/mkdir"
-msgstr "允许写/创建目录"
+msgstr "允许写入/创建文件夹"
 
-msgid "FTP Banner"
-msgstr "FTP 欢迎提示"
+#: root/usr/share/luci/menu.d/luci-app-tn-vsftpd.json:3
+msgid "FTP"
+msgstr "FTP"
 
-msgid "FTP Server"
-msgstr "FTP 服务器"
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:455
+msgid "FTP Server Settings"
+msgstr "FTP服务设置"
 
-msgid "FTP Server - Anonymous Settings"
-msgstr "FTP 服务器 - 匿名用户设置"
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:156
+msgid "FTP banner"
+msgstr "FTP欢迎语"
 
-msgid "FTP Server - General Settings"
-msgstr "FTP 服务器 - 常规设置"
-
-msgid "FTP Server - Log Settings"
-msgstr "FTP 服务器 - 日志设置"
-
-msgid "FTP Server - Virtual User %q"
-msgstr "FTP 服务器 - 虚拟用户 %q"
-
-msgid "FTP Server - Virtual User &lt;new&gt;"
-msgstr "FTP 服务器 - 虚拟用户 &lt;新用户&gt;"
-
-msgid "FTP Server - Virtual User Settings"
-msgstr "FTP 服务器 - 虚拟用户设置"
-
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:151
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:273
 msgid "File mode umask"
 msgstr "文件权限掩码"
 
-msgid "General Settings"
-msgstr "常规设置"
-
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:465
 msgid "Global Settings"
 msgstr "全局设置"
 
+#: root/usr/share/rpcd/acl.d/luci-app-tn-vsftpd.json:3
+msgid "Grant access to FTP server configuration"
+msgstr "Grant access to FTP server configuration"
+
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:353
 msgid "Home directory"
 msgstr "主目录"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:358
+msgid "Home directroy cannot be empty"
+msgstr "主目录不能为空"
+
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:83
 msgid "IPv4 Address"
-msgstr "IPv4 地址"
+msgstr "IPv4地址"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:91
 msgid "IPv6 Address"
-msgstr "IPv6 地址"
+msgstr "IPv6地址"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:228
 msgid "Idle session timeout"
-msgstr "空闲回话超时"
+msgstr "空闲超市时间"
 
-msgid "Include rename, deletion ..."
-msgstr "包括重命名、删除 ..."
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:145
+msgid ""
+"If activated, files and directories starting with '.' will be shown in "
+"directory listings even if the 'a' flag was not used by the client. This "
+"override excludes the '.' and '..' entries"
+msgstr "如果使能该选项，以'.'开头的文件和目录将始终显示，即使客户端没有使用'a'标记。该选项会排除'.'和'..'目录"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:229
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:235
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:241
+msgid "In seconds"
+msgstr "以秒为单位"
+
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:297
+msgid "Include rename, deletion, ..."
+msgstr "包含重命名、删除......"
+
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:187
 msgid "Leave empty will use user's home directory"
-msgstr "留空将使用用户主目录"
+msgstr "留空则使用用户的主目录"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:96
 msgid "Listen Port"
 msgstr "监听端口"
 
-msgid "Listening Settings"
-msgstr "监听设置"
-
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:466
 msgid "Local Users"
 msgstr "本地用户"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:469
 msgid "Log Settings"
 msgstr "日志设置"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:446
 msgid "Log file"
 msgstr "日志文件"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:246
 msgid "Max clients"
-msgstr "最大连接数"
+msgstr "最多连接数"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:252
 msgid "Max clients per IP"
-msgstr "同一 IP 的最大连接数"
+msgstr "每个IP最大连接数"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:264
 msgid "Max login fail count"
-msgstr "最大登录尝试数"
+msgstr "最大失败登陆次数"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:258
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:278
 msgid "Max transmit rate"
-msgstr "最大传输速率"
+msgstr "最大传输速度"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:456
+msgid "On this page you may configure FTP server settings"
+msgstr "你可以在本页面配置FTP服务"
+
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:348
+msgid "Password"
+msgstr "密码"
+
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:186
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:390
 msgid "Root directory"
 msgstr "根目录"
 
-msgid "Settings"
-msgstr "设置"
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:55
+msgid "Run FTP server on system's startup"
+msgstr "系统启动时运行FTP服务"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:463
+msgid "Service Settings"
+msgstr "服务设置"
+
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:144
 msgid "Show dot files"
-msgstr "显示以点开头的文件 (隐藏文件)"
+msgstr "显示隐藏(dot)文件"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:215
+msgid "The maximum port to allocate for PASV style data connections"
+msgstr "被动模式最大分配的端口"
+
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:209
+msgid "The minimum port to allocate for PASV style data connections"
+msgstr "被动模式最小分配的端口"
+
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:223
 msgid "Upload only"
 msgstr "仅上传"
 
-msgid "Uploaded file mode will be 666 - &lt;umask&gt;; directory mode will be 777 - &lt;umask&gt;."
-msgstr "上传的文件权限将被设置为 666 - &lt;掩码&gt;；目录权限将被设置为 777 - &lt;掩码&gt;。"
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:152
+msgid ""
+"Uploaded file mode will be 666&thinsp;&minus;&thinsp;umask, directory mode "
+"will be 777&thinsp;&minus;&thinsp;umask"
+msgstr ""
+"Uploaded file mode will be 666&thinsp;&minus;&thinsp;umask, directory mode "
+"will be 777&thinsp;&minus;&thinsp;umask"
 
-msgid "User Settings"
-msgstr "用户设置"
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:321
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:340
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:385
+msgid "Username"
+msgstr "用户名"
 
-msgid "User lists"
-msgstr "用户列表"
-
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:344
 msgid "Username cannot be empty"
 msgstr "用户名不能为空"
 
-msgid "When disabled, all download request will give permission denied."
-msgstr "如果禁止，所有的下载请求都将被拒绝。"
-
-msgid "When disabled, all write request will give permission denied."
-msgstr "如果禁止，所有的写类型请求都将被拒绝。"
-
-msgid "When disabled, list commands will give permission denied."
-msgstr "如果禁止，列目录命令将被拒绝。"
-
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:335
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:467
 msgid "Virtual Users"
 msgstr "虚拟用户"
 
-msgid "in seconds"
-msgstr "单位为秒"
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:128
+msgid "When disabled, all download request will give permission denied"
+msgstr "本选项被禁用时，所有下载请求都会被拒绝"
 
-msgid "in KB/s, 0 means no limitation"
-msgstr "单位为 KB/s，0 表明不限制"
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:121
+msgid "When disabled, all write request will give permission denied"
+msgstr "本选项被禁用时，所有写入请求都会被拒绝"
 
-msgid "Pasv Min Port"
-msgstr "Pasv 模式最小端口"
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:135
+msgid "When disabled, list commands will give permission denied"
+msgstr "本选项被禁用时，列表请求都会被拒绝"
 
-msgid "Pasv Max Port"
-msgstr "Pasv 模式最大端口"
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:413
+msgid "disable"
+msgstr "禁用"
 
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:414
+msgid "to file"
+msgstr "写入日志文件"
+
+#: htdocs/luci-static/resources/view/vsftpd/vsftpd.js:415
+msgid "to syslog"
+msgstr "写入系统日志"
