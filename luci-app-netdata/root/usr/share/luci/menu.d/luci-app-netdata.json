@@ -3,7 +3,7 @@
             "title": "NetData",
             "action": {
                     "type": "view",
-                    "path": "netdata"
+                    "path": "netdata/netdata"
             }
     },
     "depends": {
