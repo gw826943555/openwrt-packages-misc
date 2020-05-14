@@ -1,12 +1,12 @@
 {
-    "admin/status/netdata": {
-            "title": "NetData",
-            "action": {
-                    "type": "view",
-                    "path": "netdata/netdata"
-            }
-    },
-    "depends": {
-            "acl": [ "luci-app-netdata" ]
-    }
+	"admin/status/netdata": {
+		"title": "NetData",
+		"action": {
+			"type": "view",
+			"path": "netdata/netdata"
+		},
+		"depends": {
+			"acl": [ "luci-app-netdata" ]
+		}
+	}
 }
