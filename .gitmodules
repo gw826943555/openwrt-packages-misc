@@ -10,3 +10,6 @@
 [submodule "luci-app-netports"]
 	path = luci-app-netports
 	url = https://github.com/gw826943555/luci-app-tn-netports
+[submodule "luci-app-clash"]
+	path = luci-app-clash
+	url = https://github.com/gw826943555/luci-app-clash
