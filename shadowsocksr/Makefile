@@ -20,8 +20,6 @@ PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION).tar.xz
 PKG_LICENSE:=GPL-3.0-or-later
 PKG_LICENSE_FILES:=LICENSE
 
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)/$(BUILD_VARIANT)/$(PKG_NAME)-$(PKG_VERSION)-$(PKG_SOURCE_VERSION)
-
 PKG_INSTALL:=1
 PKG_FIXUP:=autoreconf
 PKG_USE_MIPS16:=0
@@ -59,12 +57,12 @@ define Package/shadowsocksr-libev/Default
     URL:=https://github.com/shadowsocksrr/shadowsocksr-libev
     DEPENDS:=+libev +libopenssl +libpthread +libsodium +shadowsocksr-libev-config $(DEPENDS_$(1))
   endef
+endef
 
-  define Package/shadowsocksr-libev-$(1)/install
-	$$(INSTALL_DIR) $$(1)/usr/bin
-	$$(INSTALL_BIN) $$(PKG_INSTALL_DIR)/usr/bin/$(1) $$(1)/usr/bin
-  endef
-
+define Package/shadowsocksr-libev-ssr-redir/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-redir $(1)/usr/bin/ssr-redir
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/server/ss-check $(1)/usr/bin/ssr-check
 endef
 
 DEPENDS_ssr-local = +libpcre
