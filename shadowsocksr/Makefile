@@ -32,7 +32,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/shadowsocksr-libev-config
 	SECTION:=net
 	CATEGORY:=Network
-	SUBMENU:=Web Servers/Proxies
+	SUBMENU:=ShadowsocksR
 	TITLE:=shadowsocksr-libev config scripts
 	URL:=https://github.com/shadowsocksrr/shadowsocksr-libev
 	#todo
@@ -54,7 +54,7 @@ define Package/shadowsocksr-libev/Default
   define Package/shadowsocksr-libev-$(1)
     SECTION:=net
     CATEGORY:=Network
-    SUBMENU:=Web Servers/Proxies
+    SUBMENU:=ShadowsocksR
     TITLE:=shadowsocksr-libev $(1)
     URL:=https://github.com/shadowsocksrr/shadowsocksr-libev
     DEPENDS:=+libev +libopenssl +libpthread +libsodium +shadowsocksr-libev-config $(DEPENDS_$(1))
@@ -70,7 +70,8 @@ endef
 DEPENDS_ssr-local = +libpcre
 DEPENDS_ssr-server = +libcares +libpcre
 
-SHADOWSOCKSR_COMPONENTS:=ssr-local ssr-redir ssr-tunnel ssr-server
+#SHADOWSOCKSR_COMPONENTS:=ssr-local ssr-redir ssr-tunnel ssr-server
+SHADOWSOCKSR_COMPONENTS:=ssr-redir
 define shadowsocksr-libev/templates
   $(foreach component,$(SHADOWSOCKSR_COMPONENTS),
     $(call Package/shadowsocksr-libev/Default,$(component))
@@ -82,7 +83,7 @@ $(eval $(call shadowsocksr-libev/templates))
 define Package/shadowsocksr-libev-ssr-rules
   SECTION:=net
   CATEGORY:=Network
-  SUBMENU:=Web Servers/Proxies
+  SUBMENU:=ShadowsocksR
   TITLE:=shadowsocksr-libev ssr-rules
   URL:=https://github.com/shadowsocksrr/shadowsocksr-libev
   DEPENDS:=+ip +ipset +iptables-mod-tproxy +resolveip +shadowsocksr-libev-ssr-redir +shadowsocksr-libev-config
