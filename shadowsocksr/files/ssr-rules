@@ -3,6 +3,7 @@
 # Copyright (C) 2017 Yousong Zhou <yszhou4tech@gmail.com>
 #
 # The design idea was derived from ss-rules by Jian Chang <aa65535@live.com>
+# Modyfied by William
 #
 # This is free software, licensed under the GNU General Public License v3.
 # See /LICENSE for more information.
@@ -28,9 +29,9 @@ Usage: ssr-rules [options]
 	                When present, must be the first argument
 	-h, --help      Show this help message then exit
 	-f, --flush     Flush rules, ipset then exit
-	-l <port>       Local port number of ss-redir with TCP mode
-	-L <port>       Local port number of ss-redir with UDP mode
-	-s <ips>        List of ip addresses of remote shadowsocks server
+	-l <port>       Local port number of ssr-redir with TCP mode
+	-L <port>       Local port number of ssr-redir with UDP mode
+	-s <ips>        List of ip addresses of remote shadowsocksr server
 	--ifnames       Only apply rules on packets from these ifnames
 	--src-bypass <ips|cidr>
 	--src-forward <ips|cidr>
@@ -101,10 +102,10 @@ o_src_default=bypass
 o_dst_default=bypass
 o_local_default=bypass
 
-alias grep_af="sed -ne '/:/!p'"
+alias grep_af="sed -ne '/:/!p' | sed -ne '/#/!p'"
 o_dst_bypass_="$o_dst_bypass4_"
 if [ -n "$o_use_ipv6" ]; then
-	alias grep_af="sed -ne /:/p"
+	alias grep_af="sed -ne /:/p | sed -ne '/#/!p'"
 	alias iptables=ip6tables
 	alias iptables-save=ip6tables-save
 	alias iptables-restore=ip6tables-restore

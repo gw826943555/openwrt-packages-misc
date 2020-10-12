@@ -1,2 +1,2 @@
 #!/bin/sh
-/etc/init.d/shadowsocksr-libev reload
+/etc/init.d/shadowsocksr reload

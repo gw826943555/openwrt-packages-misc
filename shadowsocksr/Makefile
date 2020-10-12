@@ -31,7 +31,7 @@ define Package/shadowsocksr-redir
 	SUBMENU:=ShadowsocksR
 	TITLE:=shadowsocksr-libev ssr-redir
 	URL:=https://github.com/shadowsocksrr/shadowsocksr-libev
-	DEPENDS:=+libev +libopenssl +libpthread +libsodium +shadowsocksr-config +libudns +zlib 
+	DEPENDS:=+libev +libopenssl +libpthread +libsodium +shadowsocksr-config +libudns +zlib +resolveip
 endef
 
 CONFIGURE_ARGS += \
@@ -77,12 +77,22 @@ define Package/shadowsocksr-rules
   DEPENDS:=+ip +ipset +iptables-mod-tproxy +resolveip +shadowsocksr-redir +shadowsocksr-config
 endef
 
+define Package/shadowsocksr-rules/conffiles
+/etc/shadowsocksr/dst_ips.bypass
+/etc/shadowsocksr/dst_ips.forward
+endef
+
 define Package/shadowsocksr-rules/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./files/ssr-rules $(1)/usr/bin
+
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_DATA) ./files/firewall.ssr-rules $(1)/etc
 	$(INSTALL_BIN) ./files/ssr-rules.defaults $(1)/etc/uci-defaults
+
+	$(INSTALL_DIR) $(1)/etc/shadowsocksr
+	$(INSTALL_CONF) ./files/dst_ips.bypass $(1)/etc/shadowsocksr/dst_ips.bypass
+	$(INSTALL_CONF) ./files/dst_ips.forward $(1)/etc/shadowsocksr/dst_ips.forward
 endef
 
 define Package/shadowsocksr-rules/prerm
