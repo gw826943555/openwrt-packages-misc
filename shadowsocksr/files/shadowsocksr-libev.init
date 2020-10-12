@@ -117,6 +117,7 @@ ssr_rules_call() {
 start_service() {
 	mkdir -p /var/etc/shadowsocksr-libev
 	
+	config_load shadowsocksr
 	ssr_xxx
 	ssr_rules
 }
