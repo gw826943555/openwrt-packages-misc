@@ -102,10 +102,10 @@ o_src_default=bypass
 o_dst_default=bypass
 o_local_default=bypass
 
-alias grep_af="sed -ne '/:/!p' | sed -ne '/#/!p'"
+alias grep_af="sed -ne '/:/!p'"
 o_dst_bypass_="$o_dst_bypass4_"
 if [ -n "$o_use_ipv6" ]; then
-	alias grep_af="sed -ne /:/p | sed -ne '/#/!p'"
+	alias grep_af="sed -ne /:/p"
 	alias iptables=ip6tables
 	alias iptables-save=ip6tables-save
 	alias iptables-restore=ip6tables-restore
@@ -135,6 +135,9 @@ ssr_rules_parse_args() {
 			--dst-forward-recentrst) o_dst_forward_recentrst=1; shift 1;;
 			--dst-bypass-file) o_dst_bypass_file="$2"; shift 2;;
 			--dst-forward-file) o_dst_forward_file="$2"; shift 2;;
+			--dst-net-forward-file) o_dst_net_forward_file="$2"; shift 2;;
+			--dst-net-dns-server) o_dst_net_dns_server="$2"; shift 2;;
+			--dst-net-dns-port) o_dst_net_dns_port="$2"; shift 2;;
 			*) __errmsg "unknown option $1"; return 1;;
 		esac
 	done
@@ -159,6 +162,10 @@ ssr_rules_flush() {
 	for setname in $(ipset -n list | grep "ssr_rules${o_af}_"); do
 		ipset destroy "$setname" 2>/dev/null || true
 	done
+
+	sed -i "/dnsmasq.ssr/d" /etc/dnsmasq.conf >/dev/null 2>&1
+	[ -d "/tmp/dnsmasq.ssr" ] && rm -rf /tmp/dnsmasq.ssr
+	/etc/init.d/dnsmasq restart >/dev/null 2>&1
 }
 
 ssr_rules_ipset_init() {
@@ -174,8 +181,8 @@ ssr_rules_ipset_init() {
 		$(ssr_rules_ipset_mkadd ssr_rules${o_af}_src_bypass "$o_src_bypass")
 		$(ssr_rules_ipset_mkadd ssr_rules${o_af}_src_forward "$o_src_forward")
 		$(ssr_rules_ipset_mkadd ssr_rules${o_af}_src_checkdst "$o_src_checkdst")
-		$(ssr_rules_ipset_mkadd ssr_rules${o_af}_dst_bypass "$o_dst_bypass $(cat "$o_dst_bypass_file" 2>/dev/null)")
-		$(ssr_rules_ipset_mkadd ssr_rules${o_af}_dst_forward "$o_dst_forward $(cat "$o_dst_forward_file" 2>/dev/null)")
+		$(ssr_rules_ipset_mkadd ssr_rules${o_af}_dst_bypass "$o_dst_bypass $(cat "$o_dst_bypass_file" 2>/dev/null | sed '/^#/d')")
+		$(ssr_rules_ipset_mkadd ssr_rules${o_af}_dst_forward "$o_dst_forward $(cat "$o_dst_forward_file" 2>/dev/null | sed '/^#/d')")
 	EOF
 }
 
@@ -293,7 +300,18 @@ ssr_rules_iptchains_mkprerules() {
 	fi
 }
 
+ssr_rules_dnsmasq_init() {
+	mkdir -p /tmp/dnsmasq.ssr
+
+	cat $o_dst_net_forward_file | sed -r 's#(.+)#server=/\1/'$o_dst_net_dns_server'\#'$o_dst_net_dns_port'#g' > /tmp/dnsmasq.ssr/dst_net.forward
+	cat $o_dst_net_forward_file | sed -r 's#(.+)#ipset=/\1/'ssr_rules_dst_forward'#g' >> /tmp/dnsmasq.ssr/dst_net.forward
+
+	echo 'conf-dir=/tmp/dnsmasq.ssr' >> /etc/dnsmasq.conf
+	/etc/init.d/dnsmasq restart >/dev/null 2>&1
+}
+
 ssr_rules_parse_args "$@"
 ssr_rules_flush
 ssr_rules_ipset_init
 ssr_rules_iptchains_init
+ssr_rules_dnsmasq_init

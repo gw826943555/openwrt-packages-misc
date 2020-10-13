@@ -75,6 +75,7 @@ ssr_rules() {
 	local args
 
 	[ -x "$bin" ] || return 1
+
 	"$bin" -f
 #	"$bin" -6 -f
 
@@ -110,6 +111,9 @@ ssr_rules_call() {
 			--src-checkdst "$src_ips_checkdst" \
 			--ifnames "$ifnames" \
 			--ipt-extra "$ipt_args" \
+			--dst-net-forward-file "$dst_net_forward_file" \
+			--dst-net-dns-server "$dst_net_dns_server" \
+			--dst-net-dns-port "$dst_net_dns_port" \
 			$args \
 		|| "$bin" "$@" -f
 }
@@ -166,5 +170,8 @@ validate_ssr_rules_section() {
 		'local_default:or("bypass", "forward", "checkdst"):bypass' \
 		'dst_forward_recentrst:bool:0' \
 		'ifnames:maxlength(15)' \
-		'ipt_args:string'
+		'ipt_args:string' \
+		'dst_net_dns_port:port' \
+		'dst_net_dns_server:ipaddr' \
+		'dst_net_forward_file:file'
 }
