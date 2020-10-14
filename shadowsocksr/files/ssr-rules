@@ -136,6 +136,7 @@ ssr_rules_parse_args() {
 			--dst-bypass-file) o_dst_bypass_file="$2"; shift 2;;
 			--dst-forward-file) o_dst_forward_file="$2"; shift 2;;
 			--dst-net-forward-file) o_dst_net_forward_file="$2"; shift 2;;
+			--dst-net-bypass-file) o_dst_net_bypass_file="$2"; shift 2;;
 			--dst-net-dns-server) o_dst_net_dns_server="$2"; shift 2;;
 			--dst-net-dns-port) o_dst_net_dns_port="$2"; shift 2;;
 			*) __errmsg "unknown option $1"; return 1;;
@@ -303,8 +304,9 @@ ssr_rules_iptchains_mkprerules() {
 ssr_rules_dnsmasq_init() {
 	mkdir -p /tmp/dnsmasq.ssr
 
-	cat $o_dst_net_forward_file | sed -r 's#(.+)#server=/\1/'$o_dst_net_dns_server'\#'$o_dst_net_dns_port'#g' > /tmp/dnsmasq.ssr/dst_net.forward
-	cat $o_dst_net_forward_file | sed -r 's#(.+)#ipset=/\1/'ssr_rules_dst_forward'#g' >> /tmp/dnsmasq.ssr/dst_net.forward
+	cat $o_dst_net_forward_file | sed -r 's#(.+)#server=/\1/'$o_dst_net_dns_server'\#'$o_dst_net_dns_port'#g' > /tmp/dnsmasq.ssr/dnsmasq.ssr
+	cat $o_dst_net_forward_file | sed -r 's#(.+)#ipset=/\1/'ssr_rules_dst_forward'#g' >> /tmp/dnsmasq.ssr/dnsmasq.ssr
+	cat $o_dst_net_bypass_file | sed -r 's#(.+)#ipset=/\1/'ssr_rules_dst_bypass'#g' >> /tmp/dnsmasq.ssr/dnsmasq.ssr
 
 	echo 'conf-dir=/tmp/dnsmasq.ssr' >> /etc/dnsmasq.conf
 	/etc/init.d/dnsmasq restart >/dev/null 2>&1

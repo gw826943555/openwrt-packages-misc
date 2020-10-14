@@ -112,6 +112,7 @@ ssr_rules_call() {
 			--ifnames "$ifnames" \
 			--ipt-extra "$ipt_args" \
 			--dst-net-forward-file "$dst_net_forward_file" \
+			--dst-net-bypass-file "$dst_net_bypass_file" \
 			--dst-net-dns-server "$dst_net_dns_server" \
 			--dst-net-dns-port "$dst_net_dns_port" \
 			$args \
@@ -173,5 +174,6 @@ validate_ssr_rules_section() {
 		'ipt_args:string' \
 		'dst_net_dns_port:port' \
 		'dst_net_dns_server:ipaddr' \
-		'dst_net_forward_file:file'
+		'dst_net_forward_file:file' \
+		'dst_net_bypass_file:file'
 }

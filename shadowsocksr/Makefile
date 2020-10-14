@@ -93,6 +93,7 @@ define Package/shadowsocksr-rules/install
 	$(INSTALL_DIR) $(1)/etc/shadowsocksr
 	$(INSTALL_CONF) ./files/dst_ips.bypass $(1)/etc/shadowsocksr/dst_ips.bypass
 	$(INSTALL_CONF) ./files/dst_ips.forward $(1)/etc/shadowsocksr/dst_ips.forward
+	$(INSTALL_CONF) ./files/dst_net.bypass $(1)/etc/shadowsocksr/dst_net.bypass
 	$(INSTALL_CONF) ./files/dst_net.forward $(1)/etc/shadowsocksr/dst_net.forward
 endef
 
