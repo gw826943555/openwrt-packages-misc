@@ -13,65 +13,65 @@ NAME=shadowsocksr
 CONFIG_FILE=/var/etc/shadowsocksr-libev/ssr_redir.json
 SSR_REDIR=/usr/bin/ssr-redir
 
-server_cfg="nil"
-
-get_host_ip() {
-	local host=$1
-	local isip=""
-	local ip=$host
-	isip=$(echo $host | grep -E "([0-9]{1,3}[\.]){3}[0-9]{1,3}")
-	if [ -z "$isip" ]; then
-		if [ "$host" != "${host#*:[0-9a-fA-F]}" ]; then
-			ip=$host
-		else
-			local ip=$(resolveip -4 -t 3 $host | awk 'NR==1{print}')
-			[ -z "$ip" ] && ip=$(wget -q -O- http://119.29.29.29/d?dn=$1 | awk -F ';' '{print $1}')
-		fi
-	fi
-	echo ${ip:="ERROR"}
-}
-
-ssr_mk_config_file() {
-	cat <<-EOF >$CONFIG_FILE
-		{
-		    "server": "$(get_host_ip $(uci_get ${NAME} ${server_cfg} server))",
-		    "server_port": $(uci_get ${NAME} ${server_cfg} server_port),
-		    "local_address": "$(uci_get ${NAME} global local_address)",
-			"local_port": "$(uci_get ${NAME} global local_port)",
-		    "password": "$(uci_get ${NAME} ${server_cfg} password)",
-		    "timeout": $(uci_get ${NAME} global time_out),
-		    "method": "$(uci_get ${NAME} ${server_cfg} method)",
-		    "protocol": "$(uci_get ${NAME} ${server_cfg} protocol)",
-		    "protocol_param": "$(uci_get ${NAME} ${server_cfg} protocol_param)",
-		    "obfs": "$(uci_get ${NAME} ${server_cfg} obfs)",
-		    "obfs_param": "$(uci_get ${NAME} ${server_cfg} obfs_param)"
-		}
-EOF
-}
-
 ssr_xxx() {
 	[ -x $SSR_REDIR ] || return
-	
-	server_cfg=$(uci_get shadowsocksr global server)
-	[ "$(uci_get shadowsocksr global disabled )" = 0 ] || return
-	[ "${server_cfg}" != "nil" ] || return
+	validate_ssr_redir_section "global" ssr_validate_mklocal
+	validate_ssr_redir_section "global" || return
+	[ "$disabled" = 0 ] || { echo "ssr_redir disbaled" && return; }
 
-	ssr_mk_config_file
+	validate_common_server_options "$server_cfg" ssr_validate_mklocal
+	validate_common_server_options "$server_cfg" || { echo "server config error" && return; }
+
+	if [ $reuse_port -eq 0 ];then
+		reuse_port='false'
+	else
+		reuse_port='true'
+	fi
+
+	if [ $fast_open -eq 0 ];then
+		fast_open='false'
+	else
+		fast_open='true'
+	fi
+
+	cat <<-EOF >$CONFIG_FILE
+		{
+		"server": "${server}",
+		"server_port": ${server_port},
+		"local_address": "${local_address}",
+		"local_port": ${local_port},
+		"password": "${password}",
+		"timeout": ${timeout},
+		"method": "${encryption}",
+		"protocol": "${protocol}",
+		"protocol_param": "${protocol_param}",
+		"obfs": "${obfs}",
+		"obfs_param": "${obfs_param}",
+		"reuse_port": ${reuse_port},
+		"fast_open": ${fast_open}
+		}
+	EOF
 
 	procd_open_instance
-	procd_set_param command "$SSR_REDIR" -c "$CONFIG_FILE" -u -v
+	procd_set_param command "$SSR_REDIR" -c "$CONFIG_FILE" -u
+	[ "$verbose" = 0 ] || procd_append_param command -v
 	procd_set_param file "$CONFIG_FILE"
 	procd_set_param respawn
 	procd_close_instance
+	ssr_rules_cb
 
 	return
+}
+
+ssr_rules_cb() {
+	ssr_rules_server="$server"
+	ssr_rules_port="$local_port"
 }
 
 ssr_rules() {
 	local cfg="ssr_rules"
 	local bin="/usr/bin/ssr-rules"
 	local cfgtype
-	local local_port_tcp local_port_udp
 	local args
 
 	[ -x "$bin" ] || return 1
@@ -86,8 +86,6 @@ ssr_rules() {
 	validate_ssr_rules_section "$cfg" || return 1
 	[ "$disabled" = 0 ] || return 0
 
-	local_port_tcp="$(uci_get ${NAME} global local_port)"
-	local_port_udp="$(uci_get ${NAME} global local_port)"
 	[ "$dst_forward_recentrst" = 0 ] || args="$args --dst-forward-recentrst"
 
 	ssr_rules_call
@@ -96,9 +94,9 @@ ssr_rules() {
 
 ssr_rules_call() {
 	/usr/bin/ssr-rules "$@" \
-			-s "$(uci_get ${NAME} ${server_cfg} server)" \
-			-l "$local_port_tcp" \
-			-L "$local_port_udp" \
+			-s "$ssr_rules_server" \
+			-l "$ssr_rules_port" \
+			-L "$ssr_rules_port" \
 			--src-default "$src_default" \
 			--dst-default "$dst_default" \
 			--local-default "$local_default" \
@@ -156,8 +154,37 @@ ssr_validate() {
 	uci_validate_section shadowsocksr "$@"
 }
 
+validate_common_server_options() {
+	local stream_methods='"table", "rc4", "rc4-md5", "aes-128-cfb", "aes-192-cfb", "aes-256-cfb", "aes-128-ctr", "aes-192-ctr", "aes-256-ctr", "bf-cfb", "camellia-128-cfb", "camellia-192-cfb", "camellia-256-cfb", "salsa20", "chacha20", "chacha20-ietf"'
+	local aead_methods='"aes-128-gcm", "aes-192-gcm", "aes-256-gcm", "chacha20-ietf-poly1305", "xchacha20-ietf-poly1305"'
+	local obfs_methods='"plain", "http_simple", "http_post", "tls1.2_ticket_auth", "tls1.2_ticket_fastauth"'
+	local protocol_methods='"origin", "verify_deflate", "auth_sha1_v4", "auth_aes128_sha1", "auth_aes128_md5", "auth_chain_a", "auth_chain_b"'
+
+	uci_validate_section shadowsocksr server "${1}" \
+		'server:host' \
+		'server_port:port' \
+		'password:string' \
+		"encryption:or($stream_methods, $aead_methods)" \
+		"obfs:or($obfs_methods)" \
+		'obfs_param:string' \
+		"protocol:or($protocol_methods)" \
+		'protocol_param:string'
+}
+
+validate_ssr_redir_section() {
+	uci_validate_section shadowsocksr ssr_redir "${1}" \
+		'server_cfg:uci("shadowsocksr","@server")' \
+		'disabled:bool:1' \
+		'local_address:ipaddr:0.0.0.0' \
+		'local_port:port:1080' \
+		'fast_open:bool:0' \
+		'reuse_port:bool:1' \
+		'verbose:bool:0' \
+		'timeout:uinteger'
+}
+
 validate_ssr_rules_section() {
-	"${2:-ssr_validate}" ssr_rules "$1" \
+	uci_validate_section shadowsocksr ssr_rules "$1" \
 		'disabled:bool:0' \
 		'src_ips_bypass:or(ipaddr,cidr)' \
 		'src_ips_forward:or(ipaddr,cidr)' \
