@@ -52,12 +52,15 @@ ssr_xxx() {
 		}
 	EOF
 
-	procd_open_instance
-	procd_set_param command "$SSR_REDIR" -c "$CONFIG_FILE" -u
-	[ "$verbose" = 0 ] || procd_append_param command -v
-	procd_set_param file "$CONFIG_FILE"
-	procd_set_param respawn
-	procd_close_instance
+	for i in $(seq 1 $threads); do
+		procd_open_instance
+		procd_set_param command "$SSR_REDIR" -c "$CONFIG_FILE" -u
+		[ "$verbose" = 0 ] || procd_append_param command -v
+		procd_set_param file "$CONFIG_FILE"
+		procd_set_param respawn
+		procd_close_instance
+	done
+
 	ssr_rules_cb
 
 	return
@@ -180,7 +183,8 @@ validate_ssr_redir_section() {
 		'fast_open:bool:0' \
 		'reuse_port:bool:1' \
 		'verbose:bool:0' \
-		'timeout:uinteger'
+		'timeout:uinteger' \
+		'threads:range(1, 16):1'
 }
 
 validate_ssr_rules_section() {
