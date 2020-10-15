@@ -139,6 +139,7 @@ ssr_rules_parse_args() {
 			--dst-net-bypass-file) o_dst_net_bypass_file="$2"; shift 2;;
 			--dst-net-dns-server) o_dst_net_dns_server="$2"; shift 2;;
 			--dst-net-dns-port) o_dst_net_dns_port="$2"; shift 2;;
+			--dst-ports-args) o_dst_ports_args="$2"; shift 2;;
 			*) __errmsg "unknown option $1"; return 1;;
 		esac
 	done
@@ -238,7 +239,7 @@ ssr_rules_iptchains_init_() {
 
 	case "$proto" in
 		tcp)
-			forward_rules="-A ssr_rules_forward -p tcp -j REDIRECT --to-ports $o_redir_tcp_port"
+			forward_rules="-A ssr_rules_forward -p tcp $o_dst_ports_args -j REDIRECT --to-ports $o_redir_tcp_port"
 			if [ -n "$o_dst_forward_recentrst" ]; then
 				recentrst_mangle_rules="
 					*mangle
@@ -254,7 +255,7 @@ ssr_rules_iptchains_init_() {
 		udp)
 			ip rule add fwmark 1 lookup 100
 			ip route add local default dev lo table 100
-			forward_rules="-A ssr_rules_forward -p udp -j TPROXY --on-port "$o_redir_udp_port" --tproxy-mark 0x01/0x01"
+			forward_rules="-A ssr_rules_forward -p udp $o_dst_ports_args -j TPROXY --on-port "$o_redir_udp_port" --tproxy-mark 0x01/0x01"
 			;;
 	esac
 	case "$o_src_default" in
