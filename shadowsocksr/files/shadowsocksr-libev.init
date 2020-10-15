@@ -16,9 +16,10 @@ SSR_REDIR=/usr/bin/ssr-redir
 ssr_xxx() {
 	[ -x $SSR_REDIR ] || return
 	validate_ssr_redir_section "global" ssr_validate_mklocal
-	validate_ssr_redir_section "global" || return
+	validate_ssr_redir_section "global" || { echo "valide config error" && return; }
 	[ "$disabled" = 0 ] || { echo "ssr_redir disbaled" && return; }
 
+	
 	validate_common_server_options "$server_cfg" ssr_validate_mklocal
 	validate_common_server_options "$server_cfg" || { echo "server config error" && return; }
 
@@ -116,6 +117,7 @@ ssr_rules_call() {
 			--dst-net-bypass-file "$dst_net_bypass_file" \
 			--dst-net-dns-server "$dst_net_dns_server" \
 			--dst-net-dns-port "$dst_net_dns_port" \
+			--ipt-extra "$ipt_args" \
 			$args \
 		|| "$bin" "$@" -f
 }
@@ -206,5 +208,6 @@ validate_ssr_rules_section() {
 		'dst_net_dns_port:port' \
 		'dst_net_dns_server:ipaddr' \
 		'dst_net_forward_file:file' \
-		'dst_net_bypass_file:file'
+		'dst_net_bypass_file:file' \
+		'ipt_args:string'
 }
