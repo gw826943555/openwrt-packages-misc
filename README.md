@@ -1,4 +1,14 @@
 # openwrt-packages-misc
-在openwrt官方master分支上测试
 
-Tested on openwrt master
+个人收集的软件包
+
+# 使用方法
+在feeds.conf.default文件中添加
+
+`src-git misc https://github.com/gw826943555/openwrt-packages-misc.git`
+
+执行
+
+`./scripts/feeds update -a`
+
+`./scripts/feeds install -a`
