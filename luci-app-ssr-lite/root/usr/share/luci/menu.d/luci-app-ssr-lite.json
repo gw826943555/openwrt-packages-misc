@@ -1,0 +1,39 @@
+{
+	"admin/services/ssr-lite": {
+		"title": "SSR Lite",
+		"order": 59,
+		"action": {
+			"type": "firstchild"
+		},
+		"depends": {
+			"acl": [ "luci-app-ssr-lite" ]
+		}
+	},
+
+	"admin/services/ssr-lite/global": {
+		"title": "全局设置",
+		"order": 10,
+		"action": {
+			"type": "view",
+			"path": "ssr-lite/global"
+		}
+	},
+
+	"admin/services/ssr-lite/servers": {
+		"title": "服务器设置",
+		"order": 20,
+		"action": {
+			"type": "view",
+			"path": "ssr-lite/servers"
+		}
+	},
+
+	"admin/services/ssr-lite/rules": {
+		"title": "规则设置",
+		"order": 30,
+		"action": {
+			"type": "view",
+			"path": "ssr-lite/rules"
+		}
+	}
+}
