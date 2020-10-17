@@ -68,7 +68,7 @@ define Package/shadowsocksr-redir/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/server/ss-check $(1)/usr/bin/ssr-check
 endef
 
-define Package/shadowsocksr-redir/install
+define Package/shadowsocksr-redir-mbedtls/install
 	$(call Package/shadowsocksr-redir/install)
 endef
 
@@ -97,7 +97,7 @@ define Package/shadowsocksr-rules
   SUBMENU:=ShadowsocksR
   TITLE:=shadowsocksr-libev ssr-rules
   URL:=https://github.com/shadowsocksrr/shadowsocksr-libev
-  DEPENDS:=+ip +ipset +iptables-mod-tproxy +resolveip +shadowsocksr-redir +shadowsocksr-config
+  DEPENDS:=+ip +ipset +iptables-mod-tproxy +resolveip +(shadowsocksr-redir||shadowsocksr-redir-mbedtls) +shadowsocksr-config
 endef
 
 define Package/shadowsocksr-rules/conffiles
