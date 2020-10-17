@@ -103,6 +103,8 @@ endef
 define Package/shadowsocksr-rules/conffiles
 /etc/shadowsocksr/dst_ips.bypass
 /etc/shadowsocksr/dst_ips.forward
+/ect/shadowsocksr/dst_net.bypass
+/etc/shadowsocksr/dst_net.forward
 endef
 
 define Package/shadowsocksr-rules/install
