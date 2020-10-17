@@ -97,7 +97,7 @@ define Package/shadowsocksr-rules
   SUBMENU:=ShadowsocksR
   TITLE:=shadowsocksr-libev ssr-rules
   URL:=https://github.com/shadowsocksrr/shadowsocksr-libev
-  DEPENDS:=+ip +ipset +iptables-mod-tproxy +resolveip +(shadowsocksr-redir||shadowsocksr-redir-mbedtls) +shadowsocksr-config
+  DEPENDS:=+ip +ipset +iptables-mod-tproxy +resolveip
 endef
 
 define Package/shadowsocksr-rules/conffiles
