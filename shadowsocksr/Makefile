@@ -131,5 +131,6 @@ EOF
 endef
 
 $(eval $(call BuildPackage,shadowsocksr-redir))
+$(eval $(call BuildPackage,shadowsocksr-redir-mbedtls))
 $(eval $(call BuildPackage,shadowsocksr-config))
 $(eval $(call BuildPackage,shadowsocksr-rules))
