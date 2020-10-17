@@ -29,9 +29,20 @@ define Package/shadowsocksr-redir
 	SECTION:=net
 	CATEGORY:=Network
 	SUBMENU:=ShadowsocksR
-	TITLE:=shadowsocksr-libev ssr-redir
+	TITLE:=shadowsocksr-libev ssr-redir openssl
+	VARIANT:=openssl
 	URL:=https://github.com/shadowsocksrr/shadowsocksr-libev
 	DEPENDS:=+libev +libopenssl +libpthread +libsodium +shadowsocksr-config +libudns +zlib +resolveip
+endef
+
+define Package/shadowsocksr-redir-mbedtls
+	SECTION:=net
+	CATEGORY:=Network
+	SUBMENU:=ShadowsocksR
+	TITLE:=shadowsocksr-libev ssr-redir mbedtls
+	VARIANT:=mbedtls
+	URL:=https://github.com/shadowsocksrr/shadowsocksr-libev
+	DEPENDS:=+libev +libmbedtls +libpthread +libsodium +shadowsocksr-config +libudns +resolveip
 endef
 
 CONFIGURE_ARGS += \
@@ -40,6 +51,14 @@ CONFIGURE_ARGS += \
 	--disable-assert \
 	--enable-system-shared-lib
 
+ifeq ($(BUILD_VARIANT),openssl)
+	CONFIGURE_ARGS += --with-crypto-library=openssl
+endif
+
+ifeq ($(BUILD_VARIANT),mbedtls)
+	CONFIGURE_ARGS += --with-crypto-library=mbedtls
+endif
+
 TARGET_CFLAGS += -flto
 TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
@@ -47,6 +66,10 @@ define Package/shadowsocksr-redir/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-redir $(1)/usr/bin/ssr-redir
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/server/ss-check $(1)/usr/bin/ssr-check
+endef
+
+define Package/shadowsocksr-redir/install
+	$(call Package/shadowsocksr-redir/install)
 endef
 
 define Package/shadowsocksr-config
