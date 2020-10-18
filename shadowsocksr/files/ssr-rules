@@ -305,9 +305,14 @@ ssr_rules_iptchains_mkprerules() {
 ssr_rules_dnsmasq_init() {
 	mkdir -p /tmp/dnsmasq.ssr
 
-	cat $o_dst_net_forward_file | sed -r 's#(.+)#server=/\1/'$o_dst_net_dns_server'\#'$o_dst_net_dns_port'#g' > /tmp/dnsmasq.ssr/dnsmasq.ssr
-	cat $o_dst_net_forward_file | sed -r 's#(.+)#ipset=/\1/'ssr_rules_dst_forward'#g' >> /tmp/dnsmasq.ssr/dnsmasq.ssr
-	cat $o_dst_net_bypass_file | sed -r 's#(.+)#ipset=/\1/'ssr_rules_dst_bypass'#g' >> /tmp/dnsmasq.ssr/dnsmasq.ssr
+	if [ -f "$o_dst_net_forward_file" ]; then
+		cat $o_dst_net_forward_file | sed -r 's#(.+)#server=/\1/'$o_dst_net_dns_server'\#'$o_dst_net_dns_port'#g' > /tmp/dnsmasq.ssr/dnsmasq.ssr
+		cat $o_dst_net_forward_file | sed -r 's#(.+)#ipset=/\1/'ssr_rules_dst_forward'#g' >> /tmp/dnsmasq.ssr/dnsmasq.ssr
+	fi
+
+	if [ -f "$o_dst_net_bypass_file" ]; then
+		cat $o_dst_net_bypass_file | sed -r 's#(.+)#ipset=/\1/'ssr_rules_dst_bypass'#g' >> /tmp/dnsmasq.ssr/dnsmasq.ssr
+	fi
 
 	echo 'conf-dir=/tmp/dnsmasq.ssr' >> /etc/dnsmasq.conf
 	/etc/init.d/dnsmasq restart >/dev/null 2>&1

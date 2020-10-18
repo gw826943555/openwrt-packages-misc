@@ -112,7 +112,6 @@ ssr_rules_call() {
 			--src-forward "$src_ips_forward" \
 			--src-checkdst "$src_ips_checkdst" \
 			--ifnames "$ifnames" \
-			--ipt-extra "$ipt_args" \
 			--dst-net-forward-file "$dst_net_forward_file" \
 			--dst-net-bypass-file "$dst_net_bypass_file" \
 			--dst-net-dns-server "$dst_net_dns_server" \
