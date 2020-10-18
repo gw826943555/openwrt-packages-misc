@@ -68,9 +68,7 @@ define Package/shadowsocksr-redir/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/server/ss-check $(1)/usr/bin/ssr-check
 endef
 
-define Package/shadowsocksr-redir-mbedtls/install
-	$(call Package/shadowsocksr-redir/install)
-endef
+Package/shadowsocksr-redir-mbedtls/install=$(Package/shadowsocksr-redir/install)
 
 define Package/shadowsocksr-config
 	SECTION:=net
