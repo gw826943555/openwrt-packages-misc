@@ -98,7 +98,13 @@ function options_server(s, opts) {
             o.editable = true;
             return o;
         };
-    }
+	}
+	
+	o = optfunc(form.Value, 'name', _('名称'));
+	o.datatype = 'string';
+
+	o = optfunc(form.Value, 'group', _('组'));
+	o.datatype = 'string';
 
     o = optfunc(form.Value, 'server', _('服务器'));
     o.datatype = 'host';
