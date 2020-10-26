@@ -97,7 +97,7 @@ define Package/shadowsocksr-utils
 	URL:=https://github.com/shadowsocksrr/shadowsocksr-libev
 endef
 
-define Package/shadowsocksr-config/install
+define Package/shadowsocksr-utils/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./files/ssr-subscribe $(1)/usr/bin
 	$(INSTALL_BIN) ./files/ssr-ping $(1)/usr/bin
@@ -122,7 +122,6 @@ endef
 define Package/shadowsocksr-rules/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) ./files/ssr-rules $(1)/usr/bin
-	$(INSTALL_BIN) ./files/ssr-subscribe $(1)/usr/bin
 
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_DATA) ./files/firewall.ssr-rules $(1)/etc
