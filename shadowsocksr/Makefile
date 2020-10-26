@@ -89,6 +89,20 @@ define Package/shadowsocksr-config/install
 	$(INSTALL_BIN) ./files/shadowsocksr-libev.init $(1)/etc/init.d/shadowsocksr
 endef
 
+define Package/shadowsocksr-utils
+	SECTION:=net
+	CATEGORY:=Network
+	SUBMENU:=ShadowsocksR
+	TITLE:=shadowsocksr-libev utils scripts
+	URL:=https://github.com/shadowsocksrr/shadowsocksr-libev
+endef
+
+define Package/shadowsocksr-config/install
+	$(INSTALL_DIR) $(1)/usr/bin
+	$(INSTALL_BIN) ./files/ssr-subscribe $(1)/usr/bin
+	$(INSTALL_BIN) ./files/ssr-ping $(1)/usr/bin
+endef
+
 define Package/shadowsocksr-rules
   SECTION:=net
   CATEGORY:=Network
