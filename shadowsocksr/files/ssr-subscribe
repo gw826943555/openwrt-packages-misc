@@ -2,71 +2,71 @@
 . /lib/functions.sh
 
 decode() {
-        # accept pipe data
-        rep=$(tr - + | tr _ /)
-        case "$((${#rep} % 4))" in
-                2) rep="$rep==" ;;
-                3) rep="$rep=" ;;
-                *) ;;
-        esac
-        echo "$rep" | base64 -d 2> /dev/null
+	# accept pipe data
+	rep=$(tr - + | tr _ /)
+	case "$((${#rep} % 4))" in
+		2) rep="$rep==" ;;
+		3) rep="$rep=" ;;
+		*) ;;
+	esac
+	echo "$rep" | base64 -d 2> /dev/null
 }
 
 decode_protocol_link() {
-        link="$1"
-        info="$(echo "${link#*://}" | decode)"
-        case "${link%%:*}" in
-        ssr)
-                IFS=:\  read -r server server_port protocol method obfs password <<- EOF
-                        ${info%%/?*}
-                EOF
+	link="$1"
+	info="$(echo "${link#*://}" | decode)"
+	case "${link%%:*}" in
+	ssr)
+		IFS=:\  read -r server server_port protocol method obfs password <<- EOF
+			${info%%/?*}
+		EOF
 
-                while IFS='=' read -r key value; do
-                        [ -n "$value" ] && eval "$key=$(echo "$value" | decode)"
-                done <<- EOF
-                        $(echo "${info#*/?}" | tr '&' '\n')
-                EOF
+		while IFS='=' read -r key value; do
+			[ -n "$value" ] && eval "$key=$(echo "$value" | decode)"
+		done <<- EOF
+			$(echo "${info#*/?}" | tr '&' '\n')
+		EOF
 
-                server_name=$(uci add shadowsocksr server)
-                uci batch <<-EOF
-                set shadowsocksr.$server_name.server="$server"
-                set shadowsocksr.$server_name.server_port="$server_port"
-                set shadowsocksr.$server_name.password="$(echo "$password" | decode)"
-                set shadowsocksr.$server_name.encryption="$method"
-                set shadowsocksr.$server_name.protocol="$protocol"
-                set shadowsocksr.$server_name.protocol_param="${protoparam:-}"
-                set shadowsocksr.$server_name.obfs="$obfs"
-                set shadowsocksr.$server_name.obfs_param="${obfsparam:-}"
-                set shadowsocksr.$server_name.group="${group:-NoGroup}"
-                set shadowsocksr.$server_name.name="${remarks:-Null}"
-                EOF
-                echo "add ${group:-NoGroup} ${remarks:-Null}"
-                ;;
-        http|https)
-                echo "decode https"
-                for l in $(curl -Ss "$link" | decode); do
-                        decode_protocol_link "$l"
-                done
-                ;;
-        *)
-                # support downloaded content of subscription link
-                for possible_link in $info; do
-                        decode_protocol_link "$possible_link"
-                done
-                ;;
-        esac
+		server_name=$(uci add shadowsocksr server)
+		uci batch <<-EOF
+		set shadowsocksr.$server_name.server="$server"
+		set shadowsocksr.$server_name.server_port="$server_port"
+		set shadowsocksr.$server_name.password="$(echo "$password" | decode)"
+		set shadowsocksr.$server_name.encryption="$method"
+		set shadowsocksr.$server_name.protocol="$protocol"
+		set shadowsocksr.$server_name.protocol_param="${protoparam:-}"
+		set shadowsocksr.$server_name.obfs="$obfs"
+		set shadowsocksr.$server_name.obfs_param="${obfsparam:-}"
+		set shadowsocksr.$server_name.group="${group:-NoGroup}"
+		set shadowsocksr.$server_name.name="${remarks:-Null}"
+		EOF
+		echo "add ${group:-NoGroup} ${remarks:-Null}"
+		;;
+	http|https)
+		echo "decode https"
+		for l in $(curl -Ss "$link" | decode); do
+			decode_protocol_link "$l"
+		done
+		;;
+	*)
+		# support downloaded content of subscription link
+		for possible_link in $info; do
+			decode_protocol_link "$possible_link"
+		done
+		;;
+	esac
 }
 
 ssr_server_remove(){
-        if [ "$(uci get shadowsocksr.$1.group)" = "$2" ];then
-                uci delete shadowsocksr.$1
-        fi
+	if [ "$(uci get shadowsocksr.$1.group)" = "$2" ];then
+		uci delete shadowsocksr.$1
+	fi
 }
 
 ssr_subscribe(){
-        group="$(uci get shadowsocksr.$1.group)"
-        config_foreach ssr_server_remove "server" "$group"
-        decode_protocol_link "$(uci get shadowsocksr.$1.url)"
+	group="$(uci get shadowsocksr.$1.group)"
+	config_foreach ssr_server_remove "server" "$group"
+	decode_protocol_link "$(uci get shadowsocksr.$1.url)"
 }
 
 config_load shadowsocksr
