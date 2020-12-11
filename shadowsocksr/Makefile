@@ -94,7 +94,7 @@ define Package/shadowsocksr-utils
 	CATEGORY:=Network
 	SUBMENU:=ShadowsocksR
 	TITLE:=shadowsocksr-libev utils scripts
-	DEPENDS:=+coreutils-base64 +curl
+	DEPENDS:=+coreutils-base64 +curl +fping
 	URL:=https://github.com/shadowsocksrr/shadowsocksr-libev
 endef
 

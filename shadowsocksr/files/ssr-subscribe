@@ -1,6 +1,9 @@
 #!/bin/sh
 . /lib/functions.sh
 
+threads=$(cat /proc/cpuinfo | grep "processor" | wc -l)
+running=0
+
 decode() {
 	# accept pipe data
 	rep=$(tr - + | tr _ /)
@@ -27,7 +30,7 @@ decode_protocol_link() {
 			$(echo "${info#*/?}" | tr '&' '\n')
 		EOF
 
-		time="$(ping -c 1 -W 1 ${server} 2>&1 | grep -o 'time=[0-9]*.[0-9]' | awk -F '=' '{print$2}')"
+		time=$(fping -c 1 -t 500ms ${server} 2> /dev/null | grep -o '[0-9]*.[0-9]* ms' | awk '{print $1}')
 
 		cfg=$(uci add shadowsocksr server)
 		uci batch <<-EOF
@@ -43,18 +46,23 @@ decode_protocol_link() {
 		set shadowsocksr.$cfg.name="${remarks:-Null}"
 		set shadowsocksr.$cfg.ping="${time:-NaN}"
 		EOF
-		echo "add ${group:-NoGroup} ${remarks:-Null}"
+		echo "add [${time:-NaN} ms] ${group:-NoGroup} ${remarks:-Null}"
 		;;
 	http|https)
-		echo "decode https"
 		for l in $(curl -Ss "$link" | decode); do
-			decode_protocol_link "$l"
+		{
+			let "running+=1"
+			decode_protocol_link "$l" &
+			[ "$running" -ge "$threads" ] && wait && let "running-=1"
+		}
 		done
 		;;
 	*)
 		# support downloaded content of subscription link
 		for possible_link in $info; do
+		{
 			decode_protocol_link "$possible_link"
+		}
 		done
 		;;
 	esac
