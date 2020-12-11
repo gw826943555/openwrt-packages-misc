@@ -27,18 +27,21 @@ decode_protocol_link() {
 			$(echo "${info#*/?}" | tr '&' '\n')
 		EOF
 
-		server_name=$(uci add shadowsocksr server)
+		time="$(ping -c 1 -W 1 ${server} 2>&1 | grep -o 'time=[0-9]*.[0-9]' | awk -F '=' '{print$2}')"
+
+		cfg=$(uci add shadowsocksr server)
 		uci batch <<-EOF
-		set shadowsocksr.$server_name.server="$server"
-		set shadowsocksr.$server_name.server_port="$server_port"
-		set shadowsocksr.$server_name.password="$(echo "$password" | decode)"
-		set shadowsocksr.$server_name.encryption="$method"
-		set shadowsocksr.$server_name.protocol="$protocol"
-		set shadowsocksr.$server_name.protocol_param="${protoparam:-}"
-		set shadowsocksr.$server_name.obfs="$obfs"
-		set shadowsocksr.$server_name.obfs_param="${obfsparam:-}"
-		set shadowsocksr.$server_name.group="${group:-NoGroup}"
-		set shadowsocksr.$server_name.name="${remarks:-Null}"
+		set shadowsocksr.$cfg.server="$server"
+		set shadowsocksr.$cfg.server_port="$server_port"
+		set shadowsocksr.$cfg.password="$(echo "$password" | decode)"
+		set shadowsocksr.$cfg.encryption="$method"
+		set shadowsocksr.$cfg.protocol="$protocol"
+		set shadowsocksr.$cfg.protocol_param="${protoparam:-}"
+		set shadowsocksr.$cfg.obfs="$obfs"
+		set shadowsocksr.$cfg.obfs_param="${obfsparam:-}"
+		set shadowsocksr.$cfg.group="${group:-NoGroup}"
+		set shadowsocksr.$cfg.name="${remarks:-Null}"
+		set shadowsocksr.$cfg.ping="${time:-NaN}"
 		EOF
 		echo "add ${group:-NoGroup} ${remarks:-Null}"
 		;;
