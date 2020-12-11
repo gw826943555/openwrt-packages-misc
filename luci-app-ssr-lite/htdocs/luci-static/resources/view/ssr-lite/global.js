@@ -14,11 +14,10 @@ function ucival_to_bool(val) {
 return view.extend({
     values_serverlist: function(o) {
         uci.sections('shadowsocksr', 'server', function(sdata) {
-            var sname = sdata['name'],
-                server = sdata['server'],
-                server_port = sdata['server_port'];
-            var desc = '%s - %s:%s'.format(sname, server, server_port);
-                o.value(sname, desc);
+            var cfg = sdata['.name'],
+                sname = sdata['name'];
+            var desc = '%s'.format(sname);
+                o.value(cfg, desc);
         });
     },
     load: function() {
