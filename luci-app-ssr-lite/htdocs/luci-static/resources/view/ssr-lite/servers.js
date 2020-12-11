@@ -149,6 +149,7 @@ return view.extend({
 			_('远程服务器设置'));
 
 		s = m.section(form.GridSection, 'server');
+		s.anonymous = true;
 		s.addremove = true;
 		s.handleLinkImport = function() {
 			var textarea = new ui.Textarea();
