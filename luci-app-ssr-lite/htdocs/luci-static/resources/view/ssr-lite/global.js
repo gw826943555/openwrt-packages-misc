@@ -15,8 +15,9 @@ return view.extend({
     values_serverlist: function(o) {
         uci.sections('shadowsocksr', 'server', function(sdata) {
             var cfg = sdata['.name'],
+                ping = sdata['ping'],
                 sname = sdata['name'];
-            var desc = '%s'.format(sname);
+            var desc = '[%s ms] %s'.format(ping, sname);
                 o.value(cfg, desc);
         });
     },

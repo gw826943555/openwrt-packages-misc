@@ -1,6 +1,6 @@
 {
 	"admin/services/ssr-lite": {
-		"title": "SSR Lite",
+		"title": "ShadowsocksR",
 		"order": 59,
 		"action": {
 			"type": "firstchild"
