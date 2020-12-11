@@ -6,8 +6,13 @@ server_ping(){
 	server="$(uci get shadowsocksr.$1.server)"
 	name="$(uci get shadowsocksr.$1.name)"
 	time="$(ping -c 1 -W 1 ${server} 2>&1 | grep -o 'time=[0-9]*.[0-9]' | awk -F '=' '{print$2}')"
-	echo "${name} : ${time}ms"
+
+	[ -z "$time" ] && time='NaN'
+	uci set shadowsocksr.$1.ping="${time}"
+
+	echo "${name} : ${time} ms"
 }
 
 config_load shadowsocksr
 config_foreach server_ping server
+uci commit shadowsocksr
