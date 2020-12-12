@@ -3,6 +3,9 @@
 
 threads=$(cat /proc/cpuinfo | grep "processor" | wc -l)
 running=0
+#save current server for recovery
+server_current=$(uci get shadowsocksr.global.server)
+server_current=$(uci get shadowsocksr.${server_current}.name)
 
 decode() {
 	# accept pipe data
@@ -69,9 +72,11 @@ decode_protocol_link() {
 }
 
 ssr_server_remove(){
-	if [ "$(uci get shadowsocksr.$1.group)" = "$2" ];then
-		uci delete shadowsocksr.$1
-	fi
+	[ "$(uci get shadowsocksr.$1.group)" = "$2" ] && uci delete shadowsocksr.$1
+}
+
+ssr_server_recover(){
+	[ "$(uci get shadowsocksr.$1.name)" = "$2" ] && uci set shadowsocksr.global.server="$1"
 }
 
 ssr_subscribe(){
@@ -82,4 +87,7 @@ ssr_subscribe(){
 
 config_load shadowsocksr
 config_foreach ssr_subscribe "subscribe"
+uci commit shadowsocksr
+
+config_foreach ssr_server_recover "server" "$server_current"
 uci commit shadowsocksr

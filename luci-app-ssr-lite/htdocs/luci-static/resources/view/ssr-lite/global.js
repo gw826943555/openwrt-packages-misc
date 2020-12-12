@@ -53,7 +53,7 @@ return view.extend({
 			return this.map.save();
 		}
 
-        o = s.option(form.ListValue, 'server_cfg', _('远程服务器'))
+        o = s.option(form.ListValue, 'server', _('远程服务器'))
         this.values_serverlist(o)
 
         o = s.option(form.Value, 'local_address', _('本地监听地址'));
