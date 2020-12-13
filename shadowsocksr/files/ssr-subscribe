@@ -4,7 +4,7 @@
 threads=$(cat /proc/cpuinfo | grep "processor" | wc -l)
 running=0
 #save current server for recovery
-server_current=$(uci get shadowsocksr.global.server)
+server_current=$(uci get shadowsocksr.global.server_cfg)
 server_current=$(uci get shadowsocksr.${server_current}.name)
 
 decode() {
@@ -76,7 +76,7 @@ ssr_server_remove(){
 }
 
 ssr_server_recover(){
-	[ "$(uci get shadowsocksr.$1.name)" = "$2" ] && uci set shadowsocksr.global.server="$1"
+	[ "$(uci get shadowsocksr.$1.name)" = "$2" ] && uci set shadowsocksr.global.server_cfg="$1"
 }
 
 ssr_subscribe(){
