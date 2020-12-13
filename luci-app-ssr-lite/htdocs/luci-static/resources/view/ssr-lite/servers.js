@@ -112,33 +112,39 @@ function options_server(s, opts) {
 
     o = optfunc(form.Value, 'server_port', _('端口'));
     o.datatype = 'port';
-    o.size = 5;
+	o.size = 5;
+	o.modalonly = true;;
 
     o = optfunc(form.Value, 'password', _('密码'));
     o.datatype = 'string';
-    o.size = 12;
+	o.size = 12;
+	o.modalonly = true;;
 
     o = optfunc(form.ListValue, 'encryption', _('加密方式'));
     methods.forEach(function(m) {
         o.value(m);
-    });
+	});
+	o.modalonly = true;;
 
     o = optfunc(form.ListValue, 'protocol', _('协议'));
     protocol.forEach(function(m) {
         o.value(m);
-    });
+	});
+	o.modalonly = true;;
 
     o = optfunc(form.Value, "protocol_param", _('协议参数'))
-    o.datatype = 'string';
+	o.datatype = 'string';
+	o.modalonly = true;;
 
     o = optfunc(form.ListValue, 'obfs', _('混淆方式'));
     obfs.forEach(function(m) {
         o.value(m);
-    });
+	});
+	o.modalonly = true;;
 
     o = optfunc(form.Value, "obfs_param", _('混淆参数'))
-    o.datatype = 'string';
-
+	o.datatype = 'string';
+	o.modalonly = true;;
 };
 
 return view.extend({
