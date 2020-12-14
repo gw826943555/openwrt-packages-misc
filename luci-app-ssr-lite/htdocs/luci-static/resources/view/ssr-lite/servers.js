@@ -33,71 +33,71 @@ var methods = [
 ];
 
 var obfs = [
-    'plain', 
-    'http_simple', 
-    'http_post', 
-    'tls1.2_ticket_auth', 
-    'tls1.2_ticket_fastauth',
+	'plain', 
+	'http_simple', 
+	'http_post', 
+	'tls1.2_ticket_auth', 
+	'tls1.2_ticket_fastauth',
 ]
 
 var protocol = [
-    'origin', 
-    'verify_deflat',, 
-    'auth_sha1_v4',
-    'auth_aes128_sha1', 
-    'auth_aes128_md5', 
-    'auth_chain_a', 
-    'auth_chain_b',
+	'origin', 
+	'verify_deflat',, 
+	'auth_sha1_v4',
+	'auth_aes128_sha1', 
+	'auth_aes128_md5', 
+	'auth_chain_a', 
+	'auth_chain_b',
 ]
 
 function parse_uri(uri) {
-    var scheme = 'ssr://';
-    if (uri && uri.indexOf(scheme) === 0) {
-        const link = Buffer.from(uri.replace(/^ssr:\/\//, ''),'base64',).toString();
-        var hashPos = uri.lastIndexOf('#'), tag;
-        if(hashPos !== -1) {
-            tag = uri.slice(hashPos + 1);
-        }
-        const [server, port, protocol, method, obfs, pwd_and_params] = link.split(':');
+	var scheme = 'ssr://';
+	if (uri && uri.indexOf(scheme) === 0) {
+		const link = Buffer.from(uri.replace(/^ssr:\/\//, ''),'base64',).toString();
+		var hashPos = uri.lastIndexOf('#'), tag;
+		if(hashPos !== -1) {
+			tag = uri.slice(hashPos + 1);
+		}
+		const [server, port, protocol, method, obfs, pwd_and_params] = link.split(':');
 
-        const [pwd, params] = (({ query, pathname } = {}) => [
-            Buffer.from(pathname, 'base64').toString(),
-            Object.entries(qs.parse(query)).map(([key, val]) => [
-                key,
-                Buffer.from(val.toString(), 'base64').toString(),
-            ]),
-        ])(url.parse(pwd_and_params))
+		const [pwd, params] = (({ query, pathname } = {}) => [
+			Buffer.from(pathname, 'base64').toString(),
+			Object.entries(qs.parse(query)).map(([key, val]) => [
+				key,
+				Buffer.from(val.toString(), 'base64').toString(),
+			]),
+		])(url.parse(pwd_and_params))
 
-        var config = {
-            server: server,
-            server_port: port,
-            password: pwd,
-            encryption: method,
-            protocol: protocol,
-            obfs: obfs,
-        }
+		var config = {
+			server: server,
+			server_port: port,
+			password: pwd,
+			encryption: method,
+			protocol: protocol,
+			obfs: obfs,
+		}
 
-        return [config, tag];
-    }
-    return null;
+		return [config, tag];
+	}
+	return null;
 };
 
 function options_server(s, opts) {
-    var o, optfunc,
-        tab = opts && opts.tab || null;
+	var o, optfunc,
+		tab = opts && opts.tab || null;
 
-    if (!tab) {
-        optfunc = function(/* ... */) {
-            var o = s.option.apply(s, arguments);
-            o.editable = true;
-            return o;
-        };
-    } else {
-        optfunc = function(/* ... */) {
-            var o = s.taboption.apply(s, L.varargs(arguments, 0, tab));
-            o.editable = true;
-            return o;
-        };
+	if (!tab) {
+		optfunc = function(/* ... */) {
+			var o = s.option.apply(s, arguments);
+			o.editable = true;
+			return o;
+		};
+	} else {
+		optfunc = function(/* ... */) {
+			var o = s.taboption.apply(s, L.varargs(arguments, 0, tab));
+			o.editable = true;
+			return o;
+		};
 	}
 	
 	o = optfunc(form.Value, 'name', _('名称'));
@@ -105,46 +105,52 @@ function options_server(s, opts) {
 
 	o = optfunc(form.Value, 'group', _('组'));
 	o.datatype = 'string';
+	o.width = '10%';
 
-    o = optfunc(form.Value, 'server', _('服务器'));
-    o.datatype = 'host';
-    o.size = 16;
+	o = optfunc(form.Value, 'server', _('服务器'));
+	o.datatype = 'host';
+	o.size = 16;
 
-    o = optfunc(form.Value, 'server_port', _('端口'));
-    o.datatype = 'port';
+	o = optfunc(form.Value, 'server_port', _('端口'));
+	o.datatype = 'port';
 	o.size = 5;
 	o.modalonly = true;;
 
-    o = optfunc(form.Value, 'password', _('密码'));
-    o.datatype = 'string';
+	o = optfunc(form.Value, 'password', _('密码'));
+	o.datatype = 'string';
 	o.size = 12;
 	o.modalonly = true;;
 
-    o = optfunc(form.ListValue, 'encryption', _('加密方式'));
-    methods.forEach(function(m) {
-        o.value(m);
+	o = optfunc(form.ListValue, 'encryption', _('加密方式'));
+	methods.forEach(function(m) {
+		o.value(m);
 	});
 	o.modalonly = true;;
 
-    o = optfunc(form.ListValue, 'protocol', _('协议'));
-    protocol.forEach(function(m) {
-        o.value(m);
+	o = optfunc(form.ListValue, 'protocol', _('协议'));
+	protocol.forEach(function(m) {
+		o.value(m);
 	});
 	o.modalonly = true;;
 
-    o = optfunc(form.Value, "protocol_param", _('协议参数'))
+	o = optfunc(form.Value, "protocol_param", _('协议参数'))
 	o.datatype = 'string';
 	o.modalonly = true;;
 
-    o = optfunc(form.ListValue, 'obfs', _('混淆方式'));
-    obfs.forEach(function(m) {
-        o.value(m);
+	o = optfunc(form.ListValue, 'obfs', _('混淆方式'));
+	obfs.forEach(function(m) {
+		o.value(m);
 	});
 	o.modalonly = true;;
 
-    o = optfunc(form.Value, "obfs_param", _('混淆参数'))
+	o = optfunc(form.Value, "obfs_param", _('混淆参数'))
 	o.datatype = 'string';
 	o.modalonly = true;;
+
+	o = optfunc(form.Value, "ping", _('延迟(ms)'));
+	o.datatype = 'string';
+	o.readonly = true;
+	o.width = '8%';
 };
 
 return view.extend({
