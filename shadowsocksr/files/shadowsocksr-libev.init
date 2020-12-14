@@ -18,6 +18,9 @@ ssr_xxx() {
 	validate_ssr_redir_section "global" ssr_validate_mklocal
 	validate_ssr_redir_section "global" || { echo "valide config error" && return; }
 	[ "$disabled" = 0 ] || { echo "ssr_redir disbaled" && return; }
+
+	config_load shadowsocksr
+	config_foreach ssr_config_cb "server" "$server_cfg"
 	
 	validate_common_server_options "$server_cfg" ssr_validate_mklocal
 	validate_common_server_options "$server_cfg" || { echo "server config error" && return; }
@@ -64,6 +67,10 @@ ssr_xxx() {
 	ssr_rules_cb
 
 	return
+}
+
+ssr_config_cb() {
+	[ "$(uci get shadowsocksr.$1.name)" = "$2" ] && server_cfg="$1"
 }
 
 ssr_rules_cb() {
@@ -177,7 +184,7 @@ validate_common_server_options() {
 
 validate_ssr_redir_section() {
 	uci_validate_section shadowsocksr ssr_redir "${1}" \
-		'server_cfg:uci("shadowsocksr","@server")' \
+		'server_cfg:string' \
 		'disabled:bool:1' \
 		'local_address:ipaddr:0.0.0.0' \
 		'local_port:port:1080' \
