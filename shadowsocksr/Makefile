@@ -32,7 +32,7 @@ define Package/shadowsocksr-redir
 	TITLE:=shadowsocksr-libev ssr-redir openssl
 	VARIANT:=openssl
 	URL:=https://github.com/shadowsocksrr/shadowsocksr-libev
-	DEPENDS:=+libev +libopenssl +libpthread +libsodium +shadowsocksr-config +libudns +zlib +resolveip
+	DEPENDS:=+libev +libopenssl +libpthread +libsodium +shadowsocksr-config +libudns +zlib +resolveip +libpcre
 endef
 
 define Package/shadowsocksr-redir-mbedtls
@@ -42,7 +42,7 @@ define Package/shadowsocksr-redir-mbedtls
 	TITLE:=shadowsocksr-libev ssr-redir mbedtls
 	VARIANT:=mbedtls
 	URL:=https://github.com/shadowsocksrr/shadowsocksr-libev
-	DEPENDS:=+libev +libmbedtls +libpthread +libsodium +shadowsocksr-config +libudns +resolveip
+	DEPENDS:=+libev +libmbedtls +libpthread +libsodium +shadowsocksr-config +libudns +resolveip +libpcre
 endef
 
 CONFIGURE_ARGS += \
