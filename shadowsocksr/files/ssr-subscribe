@@ -46,6 +46,8 @@ decode_protocol_link() {
 		set shadowsocksr.$cfg.name="${remarks:-Null}"
 		set shadowsocksr.$cfg.ping="${time:-NaN}"
 		EOF
+		sname=$(echo $remarks | base64 | tr -d [:=+/:])
+		uci rename shadowsocksr.$cfg="$sname"
 		echo "add [${time:-NaN} ms] ${group:-NoGroup} ${remarks:-Null}"
 		;;
 	http|https)
