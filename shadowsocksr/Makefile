@@ -64,8 +64,11 @@ TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 define Package/shadowsocksr-redir/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-redir $(1)/usr/bin/ssr-redir
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/server/ss-check $(1)/usr/bin/ssr-check
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/server/ss-server $(1)/usr/bin/ssr-server
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-redir $(1)/usr/bin/ssr-redir
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/src/ss-local $(1)/usr/bin/ssr-local
+	$(LN) ssr-local $(1)/usr/bin/ssr-tunnel
 endef
 
 Package/shadowsocksr-redir-mbedtls/install=$(Package/shadowsocksr-redir/install)
