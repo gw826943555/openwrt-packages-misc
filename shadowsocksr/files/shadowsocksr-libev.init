@@ -10,8 +10,9 @@ USE_PROCD=1
 START=99
 
 NAME=shadowsocksr
-CONFIG_FILE=/var/etc/shadowsocksr-libev/ssr_redir.json
+CONFIG_FILE=/var/etc/shadowsocksr-libev/shadowsocksr.json
 SSR_REDIR=/usr/bin/ssr-redir
+SSR_TUNNEL=/usr/bin/ssr-tunnel
 
 ssr_xxx() {
 	[ -x $SSR_REDIR ] || return
@@ -38,8 +39,6 @@ ssr_xxx() {
 		{
 		"server": "${server}",
 		"server_port": ${server_port},
-		"local_address": "${local_address}",
-		"local_port": ${local_port},
 		"password": "${password}",
 		"timeout": ${timeout},
 		"method": "${encryption}",
@@ -54,21 +53,26 @@ ssr_xxx() {
 
 	for i in $(seq 1 $threads); do
 		procd_open_instance
-		procd_set_param command "$SSR_REDIR" -c "$CONFIG_FILE" -u
+		procd_set_param command "$SSR_REDIR" -c "$CONFIG_FILE" -b "$local_address" -l "$local_port" -u
 		[ "$verbose" = 0 ] || procd_append_param command -v
 		procd_set_param file "$CONFIG_FILE"
 		procd_set_param respawn
 		procd_close_instance
 	done
 
-	ssr_rules_cb
+	[ -x $SSR_TUNNEL ] || return
+
+	validate_ssr_tunnel_section "ssr_tunnel" ssr_validate_mklocal
+	validate_ssr_tunnel_section "ssr_tunnel" || { echo "valide ssr_tunnel config error" && return; }
+
+	procd_open_instance
+	procd_set_param command "$SSR_TUNNEL" -c "$CONFIG_FILE" -b "$local_server" -l "$local_port" -L "${remote_server}:${remote_port}" -U
+	[ "$verbose" = 0 ] || procd_append_param command -v
+	procd_set_param file "$CONFIG_FILE"
+	procd_set_param respawn
+	procd_close_instance
 
 	return
-}
-
-ssr_rules_cb() {
-	ssr_rules_server="$server"
-	ssr_rules_port="$local_port"
 }
 
 ssr_rules() {
@@ -76,6 +80,10 @@ ssr_rules() {
 	local bin="/usr/bin/ssr-rules"
 	local cfgtype
 	local args
+	local redir_cfg="$(uci get shadowsocksr.global.server_cfg)"
+
+	ssr_rules_server="$(uci get shadowsocksr.$redir_cfg.server)"
+	ssr_rules_port="$(uci get shadowsocksr.global.local_port)"
 
 	[ -x "$bin" ] || return 1
 
@@ -186,6 +194,14 @@ validate_ssr_redir_section() {
 		'verbose:bool:0' \
 		'timeout:uinteger' \
 		'threads:range(1, 16)'
+}
+
+validate_ssr_tunnel_section() {
+	uci_validate_section shadowsocksr ssr_tunnel "${1}" \
+		'local_server:ipaddr:0.0.0.0' \
+		'local_port:port:5353' \
+		'remote_server:ipaddr:208.67.222.222' \
+		'remote_port:port:53'
 }
 
 validate_ssr_rules_section() {
