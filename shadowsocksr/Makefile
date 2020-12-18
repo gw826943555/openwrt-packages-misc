@@ -48,8 +48,7 @@ endef
 CONFIGURE_ARGS += \
 	--disable-documentation \
 	--disable-ssp \
-	--disable-assert \
-	--enable-system-shared-lib
+	--disable-assert
 
 ifeq ($(BUILD_VARIANT),openssl)
 	CONFIGURE_ARGS += --with-crypto-library=openssl
@@ -58,9 +57,6 @@ endif
 ifeq ($(BUILD_VARIANT),mbedtls)
 	CONFIGURE_ARGS += --with-crypto-library=mbedtls
 endif
-
-TARGET_CFLAGS += -flto
-TARGET_LDFLAGS += -Wl,--gc-sections,--as-needed
 
 define Package/shadowsocksr-redir/install
 	$(INSTALL_DIR) $(1)/usr/bin
