@@ -1,0 +1,19 @@
+From: William <gw826943555@qq.com>
+Subject: [PATCH] ipq40xx: improve CPU clock
+Date: Sun, 20 Dec 2020 21:18:40 +0800
+
+This patch will fix the compile issue with musl libc.
+
+Signed-off-by: William <gw826943555@qq.com>
+---
+--- a/src/syslog_entry.c
++++ b/src/syslog_entry.c
+@@ -455,7 +455,7 @@ static int parse_timestamp(
+ 	if (*data)
+ 	{
+ 		field->value.time.unixtime =
+-			timelocal(&field->value.time.timestamp);
++			mktime(&field->value.time.timestamp);
+ 	}
+ 
+ 	return *data ? 0 : -EILSEQ;
