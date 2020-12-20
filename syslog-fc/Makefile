@@ -31,7 +31,7 @@ endef
 
 define Package/syslog-fc/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_INSTALL_DIR)/usr/bin/syslogfc $(1)/usr/bin/syslogfc
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/syslog_fc $(1)/usr/bin/syslog_fc
 endef
 
 $(eval $(call BuildPackage,syslog-fc))
