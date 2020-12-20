@@ -1,0 +1,29 @@
+{
+	"luci-app-logview": {
+		"description": "Grant access to logs viewer",
+		"read": {
+			"file": {
+				"/www/luci-static/resources/logview/plugins": [ "list" ]
+			},
+			"ubus": {
+				"file": [ "list" ]
+			}
+		}
+	},
+
+	"luci-app-logview-kernel" : {
+		"description": "Grant access to view kernel log (dmesg)",
+		"read": {
+			"file": { "/usr/libexec/luci-logview/logview-dmesg *": [ "exec" ] },
+			"ubus": { "file": [ "exec" ] }
+		}
+	},
+
+	"luci-app-logview-syslog" : {
+		"description": "Grant access to view system log (syslog)",
+		"read": {
+			"file": { "/usr/libexec/luci-logview/logview-syslog *": [ "exec" ] },
+			"ubus": { "file": [ "exec" ] }
+		}
+	}
+}
