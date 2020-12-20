@@ -291,14 +291,14 @@ return L.view.extend({
 		}
 
 		this.expandedView = !this.expandedView;
-		this.handleTableHeight();
+		//this.handleTableHeight();
 	},
 
 	update: function(log) {
 		this.updateColumns(log);
 		if (log.priorities_filter)
 			this.updatePriorities(log);
-		this.handleTableHeight();
+		//this.handleTableHeight();
 	},
 
 	updateColumns: function(log) {
@@ -503,7 +503,7 @@ return L.view.extend({
 
 		ui.tabs.initTabGroup(container.childNodes);
 	},
-
+/*
 	handleTableHeight: function() {
 		var mc     = document.querySelector('.main-content');
 		var view   = document.querySelector('div#maincontent');
@@ -534,6 +534,7 @@ return L.view.extend({
 			table.style.height = (windowHeight - tableRect.top - padding - footerHeight) + 'px';
 		});
 	},
+*/	
 
 	render: function() {
 		var logTabs = E('div', { 'data-name': 'logs' });
@@ -552,7 +553,7 @@ return L.view.extend({
 			])
 		]);
 
-		window.addEventListener('resize', this.handleTableHeight);
+		//window.addEventListener('resize', this.handleTableHeight);
 
 		this.renderTabs(logTabs);
 		return view;
