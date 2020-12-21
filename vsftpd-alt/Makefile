@@ -57,11 +57,11 @@ define Build/Compile
 endef
 
 define Package/vsftpd-alt/install
-$(call Package/vsftpd-alt/install/default, $(1))
-	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_DIR) $(1)/usr/sbin
+	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_CONF) ./files/vsftpd.config $(1)/etc/config/vsftpd
+	$(INSTALL_DIR) $(1)/etc/init.d
 	$(INSTALL_BIN) ./files/vsftpd.init $(1)/etc/init.d/vsftpd
+	$(INSTALL_DIR) $(1)/usr/sbin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/vsftpd $(1)/usr/sbin	
 endef
 
