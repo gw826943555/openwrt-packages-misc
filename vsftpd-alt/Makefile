@@ -36,11 +36,11 @@ endef
 
 ifneq ($(CONFIG_USE_MUSL),)
   NLSSTRING:=-lcrypt
+else ifneq ($(CONFIG_USE_GLIBC),)
+  NLSSTRING:=-lcrypt
 else
   NLSSTRING:=-lcrypt -lnsl
 endif
-
-TARGET_CFLAGS += -D_GNU_SOURCE -include fcntl.h
 
 define Package/vsftpd-alt
 $(call Package/vsftpd-alt/Default)
