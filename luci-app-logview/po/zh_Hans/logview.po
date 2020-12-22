@@ -1,0 +1,140 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: htdocs/luci-static/resources/view/status/logview.js:490
+msgid "Clear"
+msgstr "清除"
+
+#: htdocs/luci-static/resources/view/status/logview.js:474
+msgid "Display columns"
+msgstr "显示的列"
+
+#: htdocs/luci-static/resources/view/status/logview.js:457
+msgid "Display descending time (latest on top)"
+msgstr "按时间倒序显示（最新的在顶部）"
+
+#: htdocs/luci-static/resources/view/status/logview.js:470
+msgid "Display priorities"
+msgstr "显示级别"
+
+#: htdocs/luci-static/resources/view/status/logview.js:401
+msgctxt "Download data (action)"
+msgid "Download"
+msgstr "下载"
+
+#: htdocs/luci-static/resources/view/status/logview.js:479
+msgid "Entries filter"
+msgstr "条目过滤"
+
+#: htdocs/luci-static/resources/logview/plugins/syslog.js:39
+msgid "Facility"
+msgstr "来源"
+
+#: htdocs/luci-static/resources/logview/logview.js:212
+msgid "Failed to load log (error code %d)"
+msgstr "载入日志失败（错误码 %d）"
+
+#: htdocs/luci-static/resources/logview/logview.js:439
+msgid "Failed to parse JSON"
+msgstr "JSON 格式解析错误"
+
+#: root/usr/share/rpcd/acl.d/luci-app-logview.json:3
+msgid "Grant access to logs viewer"
+msgstr ""
+
+#: root/usr/share/rpcd/acl.d/luci-app-logview.json:15
+msgid "Grant access to view kernel log (dmesg)"
+msgstr ""
+
+#: root/usr/share/rpcd/acl.d/luci-app-logview.json:23
+msgid "Grant access to view system log (syslog)"
+msgstr ""
+
+#: htdocs/luci-static/resources/logview/logview.js:451
+msgid "Invalid data"
+msgstr "无效数据"
+
+#: htdocs/luci-static/resources/logview/plugins/kernel.js:4
+msgid "Kernel Log"
+msgstr "内核日志"
+
+#: htdocs/luci-static/resources/logview/logview.js:422
+#: htdocs/luci-static/resources/view/status/logview.js:117
+#: htdocs/luci-static/resources/view/status/logview.js:122
+#: htdocs/luci-static/resources/view/status/logview.js:426
+#: htdocs/luci-static/resources/view/status/logview.js:471
+#: htdocs/luci-static/resources/view/status/logview.js:475
+msgid "Loading data…"
+msgstr "数据载入中..."
+
+#: htdocs/luci-static/resources/view/status/logview.js:494
+msgid "Log Entries"
+msgstr "日志条目"
+
+#: htdocs/luci-static/resources/logview/logview.js:222
+msgid "Log is empty"
+msgstr "日志为空"
+
+#: root/usr/share/luci/menu.d/luci-app-logview.json:3
+msgid "Logs"
+msgstr "日志查看器"
+
+#: htdocs/luci-static/resources/view/status/logview.js:545
+msgid "Logs View"
+msgstr "日志查看器"
+
+#: htdocs/luci-static/resources/logview/plugins/kernel.js:38
+#: htdocs/luci-static/resources/logview/plugins/syslog.js:40
+msgid "Message"
+msgstr "内容"
+
+#: htdocs/luci-static/resources/logview/logview.js:226
+msgid "No entries matching \"%h\""
+msgstr "没有匹配的条目 \"%h\""
+
+#: htdocs/luci-static/resources/view/status/logview.js:373
+msgid ""
+"No logs available for display. Probably you do not have enough permissions "
+"to view the logs."
+msgstr "没有可以显示的日志，可能没有权限读取日志。"
+
+#: htdocs/luci-static/resources/logview/plugins/kernel.js:37
+#: htdocs/luci-static/resources/logview/plugins/syslog.js:38
+msgid "Priority"
+msgstr "优先级"
+
+#: htdocs/luci-static/resources/view/status/logview.js:420
+msgid "Refresh"
+msgstr "刷新"
+
+#: htdocs/luci-static/resources/view/status/logview.js:419
+msgid "Reload log contents"
+msgstr "重新载入"
+
+#: htdocs/luci-static/resources/logview/plugins/syslog.js:4
+msgid "System Log"
+msgstr "系统日志"
+
+#: htdocs/luci-static/resources/logview/plugins/syslog.js:37
+msgid "Tag"
+msgstr "标签"
+
+#: htdocs/luci-static/resources/logview/plugins/kernel.js:36
+msgid "Time"
+msgstr "时间"
+
+#: htdocs/luci-static/resources/logview/plugins/syslog.js:36
+msgid "Timestamp"
+msgstr "时间"
+
+#: htdocs/luci-static/resources/view/status/logview.js:547
+msgid "Toggle expanded view mode"
+msgstr "扩展显示模式"
+
+#: htdocs/luci-static/resources/view/status/logview.js:483
+msgid "Type to filter…"
+msgstr "输入关键词进行过滤..."
+
+#: htdocs/luci-static/resources/logview/logview.js:232
+msgid "filtered %d from %d"
+msgstr "过滤 %d 条从 %d 条日志中"
