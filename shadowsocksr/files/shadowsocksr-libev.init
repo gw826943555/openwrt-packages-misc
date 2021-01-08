@@ -53,19 +53,12 @@ ssr_xxx() {
 
 	for i in $(seq 1 $threads); do
 		procd_open_instance
-		procd_set_param command "$SSR_REDIR" -c "$CONFIG_FILE" -b "$local_address" -l "$local_port"
+		procd_set_param command "$SSR_REDIR" -c "$CONFIG_FILE" -b "$local_address" -l "$local_port" -u
 		[ "$verbose" = 0 ] || procd_append_param command -v
 		procd_set_param file "$CONFIG_FILE"
 		procd_set_param respawn
 		procd_close_instance
 	done
-
-	procd_open_instance
-	procd_set_param command "$SSR_REDIR" -c "$CONFIG_FILE" -U -b "$local_address" -l "$local_port"
-	[ "$verbose" = 0 ] || procd_append_param command -v
-	procd_set_param file "$CONFIG_FILE"
-	procd_set_param respawn
-	procd_close_instance
 
 	[ -x $SSR_TUNNEL ] || return
 
