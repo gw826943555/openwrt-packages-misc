@@ -24,6 +24,11 @@ PKG_BUILD_PARALLEL:=1
 PKG_USE_MIPS16:=0
 
 GO_PKG:=github.com/xtls/xray-core
+GO_PKG_BUILD_PKG:=$(GO_PKG)/main
+GO_PKG_LDFLAGS:=-s -w
+GO_PKG_LDFLAGS_X:= \
+	$(GO_PKG)/core.version=$(PKG_VERSION) \
+	$(GO_PKG)/core.codename=OpenWrt
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/golang/golang-package.mk
@@ -74,28 +79,13 @@ define Download/geosite
 endef
 $(eval $(call Download,geosite))
 
-define Build/Prepare
-	cp $(DL_DIR)/$(GEOIP_FILE) $(PKG_BUILD_DIR)/geoip.dat
-	cp $(DL_DIR)/$(GEOSITE_FILE) $(PKG_BUILD_DIR)/geosite.dat
-endef
-
-GO_PKG_LDFLAGS:=-s -w
-GO_PKG_LDFLAGS_X:= \
-	$(GO_PKG)/core.version=$(PKG_VERSION) \
-	$(GO_PKG)/core.codename=OpenWrt
-
-define Build/Compile
-	$(eval GO_PKG_BUILD_PKG:=$(GO_PKG)/main)
-	$(call GoPackage/Build/Compile)
-	mv -f $(GO_PKG_BUILD_BIN_DIR)/main $(GO_PKG_BUILD_BIN_DIR)/xray
-endef
-
 define Package/xray-core/install
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(GO_PKG_BUILD_BIN_DIR)/xray $(1)/usr/bin
+	$(INSTALL_BIN) $(GO_PKG_BUILD_BIN_DIR)/main $(1)/usr/bin/xray
 
 	$(INSTALL_DIR) $(1)/usr/share/xray
-	$(INSTALL_DATA) $(PKG_BUILD_DIR)/{geoip,geosite}.dat $(1)/usr/share/xray
+	$(INSTALL_DATA) $(DL_DIR)/$(GEOIP_FILE) $(1)/usr/share/xray/geoip.dat
+	$(INSTALL_DATA) $(DL_DIR)/$(GEOSITE_FILE) $(1)/usr/share/xray/geosite.dat
 endef
 
 $(eval $(call GoBinPackage,$(PKG_NAME)))
