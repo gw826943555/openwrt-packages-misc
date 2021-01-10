@@ -10,7 +10,6 @@ include $(TOPDIR)/rules.mk
 PKG_NAME:=xray-core
 PKG_VERSION:=1.2.0
 PKG_RELEASE:=1
-PKG_BUILD_DIR:=$(BUILD_DIR)/Xray-core-$(PKG_VERSION)
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/XTLS/Xray-core/tar.gz/v$(PKG_VERSION)?
@@ -79,6 +78,8 @@ define Download/geosite
 	HASH:=e74665d055b6f20be776a2a43b8534eee15223cd418f76a7ccf97d3f963c0c32
 endef
 $(eval $(call Download,geosite))
+
+PKG_UNPACK:=$(HOST_TAR) -C $(PKG_BUILD_DIR) --strip-components=1 -xzf $(DL_DIR)/$(PKG_SOURCE)
 
 define Package/xray-core/install
 	$(INSTALL_DIR) $(1)/usr/bin
