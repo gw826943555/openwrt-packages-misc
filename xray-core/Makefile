@@ -8,12 +8,12 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=xray-core
-PKG_VERSION:=1.2.0
+PKG_VERSION:=1.2.1
 PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/xtls/xray-core/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=1e32fac7a4c669751087aa6b32d922ea312afcde025866099d56cea936761d51
+PKG_HASH:=eebea67d9176cc016d21de2d8123b0a6ab795ec82af2c6b8d7467212841bdc56
 
 PKG_LICENSE:=MPL
 PKG_LICENSE_FILES:=LICENSE
@@ -61,21 +61,21 @@ GEOIP_VER:=202101070033
 GEOIP_FILE:=geoip.dat.$(GEOIP_VER)
 
 define Download/geoip
-	URL:=https://github.com/v2ray/geoip/releases/download/$(GEOIP_VER)/
+	URL:=https://github.com/v2fly/geoip/releases/download/$(GEOIP_VER)/
 	URL_FILE:=geoip.dat
 	FILE:=$(GEOIP_FILE)
 	HASH:=4effe8211bb0165c1aa99cd90af0824ec4e017fbb8853babcc0db27f4391ca86
 endef
 $(eval $(call Download,geoip))
 
-GEOSITE_VER:=20210106164413
+GEOSITE_VER:=20210111031038
 GEOSITE_FILE:=dlc.dat.$(GEOSITE_VER)
 
 define Download/geosite
-	URL:=https://github.com/v2ray/domain-list-community/releases/download/$(GEOSITE_VER)/
+	URL:=https://github.com/v2fly/domain-list-community/releases/download/$(GEOSITE_VER)/
 	URL_FILE:=dlc.dat
 	FILE:=$(GEOSITE_FILE)
-	HASH:=e74665d055b6f20be776a2a43b8534eee15223cd418f76a7ccf97d3f963c0c32
+	HASH:=ef09e558d619650f6c0c6666dfc62581d7f17f43fa87b4610f64bffb14761f4c
 endef
 $(eval $(call Download,geosite))
 
