@@ -13,3 +13,9 @@
 [submodule "luci-app-xray"]
 	path = luci-app-xray
 	url = https://github.com/yichya/luci-app-xray
+[submodule "luci-app-wrtbwmon"]
+	path = luci-app-wrtbwmon
+	url = https://github.com/brvphoenix/luci-app-wrtbwmon
+[submodule "wrtbwmon"]
+	path = wrtbwmon
+	url = https://github.com/brvphoenix/wrtbwmon
