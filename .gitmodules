@@ -19,3 +19,6 @@
 [submodule "wrtbwmon"]
 	path = wrtbwmon
 	url = https://github.com/brvphoenix/wrtbwmon
+[submodule "openwrt-vlmcsd"]
+	path = openwrt-vlmcsd
+	url = https://github.com/gw826943555/openwrt-vlmcsd.git
