@@ -22,3 +22,6 @@
 [submodule "openwrt-vlmcsd"]
 	path = openwrt-vlmcsd
 	url = https://github.com/gw826943555/openwrt-vlmcsd.git
+[submodule "openwrt-cpufreq"]
+	path = openwrt-cpufreq
+	url = https://github.com/gw826943555/openwrt-cpufreq.git
