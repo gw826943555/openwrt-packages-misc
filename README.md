@@ -1,6 +1,6 @@
 # openwrt-packages-misc
 
-个人收集的软件包
+个人收集的软件包，需要openwrt版本大于19.07
 
 # 使用方法
 在feeds.conf.default文件中添加
