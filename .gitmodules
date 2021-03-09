@@ -22,3 +22,6 @@
 [submodule "openwrt-vsftpd"]
 	path = openwrt-vsftpd
 	url = https://github.com/gw826943555/openwrt-vsftpd.git
+[submodule "openwrt-logview"]
+	path = openwrt-logview
+	url = https://github.com/gw826943555/openwrt-logview
