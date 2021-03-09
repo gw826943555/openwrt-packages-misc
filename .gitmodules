@@ -1,6 +1,3 @@
-[submodule "luci-app-diskman"]
-	path = luci-app-diskman
-	url = https://github.com/lisaac/luci-app-diskman
 [submodule "luci-app-unblockneteasemusic-mini"]
 	path = luci-app-unblockneteasemusic-mini
 	url = https://github.com/project-openwrt/luci-app-unblockneteasemusic-mini
