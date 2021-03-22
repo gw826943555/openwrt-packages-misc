@@ -1,6 +1,7 @@
 {
 	"admin/status/netdata": {
 		"title": "NetData",
+		"order": 90,
 		"action": {
 			"type": "view",
 			"path": "netdata/netdata"
