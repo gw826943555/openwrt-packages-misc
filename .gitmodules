@@ -25,3 +25,6 @@
 [submodule "openwrt-logview"]
 	path = openwrt-logview
 	url = https://github.com/gw826943555/openwrt-logview
+[submodule "wrtbwmon"]
+	path = wrtbwmon
+	url = https://github.com/brvphoenix/wrtbwmon
