@@ -1,6 +1,3 @@
-[submodule "luci-app-unblockneteasemusic-mini"]
-	path = luci-app-unblockneteasemusic-mini
-	url = https://github.com/project-openwrt/luci-app-unblockneteasemusic-mini
 [submodule "luci-app-netports"]
 	path = luci-app-netports
 	url = https://github.com/gw826943555/luci-app-tn-netports
