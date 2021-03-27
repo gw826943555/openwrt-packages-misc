@@ -1,9 +1,6 @@
 [submodule "luci-app-netports"]
 	path = luci-app-netports
 	url = https://github.com/gw826943555/luci-app-tn-netports
-[submodule "luci-app-xray"]
-	path = luci-app-xray
-	url = https://github.com/yichya/luci-app-xray
 [submodule "luci-app-wrtbwmon"]
 	path = luci-app-wrtbwmon
 	url = https://github.com/brvphoenix/luci-app-wrtbwmon
