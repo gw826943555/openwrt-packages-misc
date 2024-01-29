@@ -13,13 +13,32 @@ ss_conf=shadowsocks-rust
 ss_confdir=/var/etc/${ss_conf}
 ss_bindir=/usr/bin
 
+sslocal_locals_mkjson() {
+	section="$1"
+	local protocols='"socks", "http", "tunnel", "redir", "dns"'
+
+	uci_validate_section shadowsocks-rust sslocal_servers "$section" \
+		'local_address:ipaddr:127.0.0.1' \
+		'local_port:port:123456' \
+		"protocol:or($protocols)" \
+		'forward_address:ipaddr' \
+		'forward_port:port'
+
+	json_add_object
+	json_add_string "local_address" "$local_address"
+	json_add_int "local_port" "$local_port"
+	[ -z "$protocol" ] || json_add_string "protocol" "$protocol"
+	[ -z "$forward_address" ] || json_add_string "forward_address" "$forward_address"
+	[ -z "$forward_port" ] || json_add_int "forward_port" "$forward_port"
+	json_close_object
+}
+
 sslocal_servers_mkjson() {
 	section="$1"
 	local stream_methods='"table", "rc4", "rc4-md5", "aes-128-cfb", "aes-192-cfb", "aes-256-cfb", "aes-128-ctr", "aes-192-ctr", "aes-256-ctr", "bf-cfb", "camellia-128-cfb", "camellia-192-cfb", "camellia-256-cfb", "salsa20", "chacha20", "chacha20-ietf"'
 	local aead_methods='"aes-128-gcm", "aes-192-gcm", "aes-256-gcm", "chacha20-ietf-poly1305", "xchacha20-ietf-poly1305"'
 
 	uci_validate_section shadowsocks-rust sslocal_servers "$section" \
-		'disabled:bool:1' \
 		'server:string' \
 		'server_port:port' \
 		'password:string' \
@@ -28,10 +47,7 @@ sslocal_servers_mkjson() {
 		'plugin:string' \
 		'plugin_opts:string'
 
-	[ "$disabled" -eq "0" ] || return 1
-
 	json_add_object
-	json_add_boolean "disabled" "$disabled"
 	json_add_string "server" "$server"
 	json_add_int "server_port" "$server_port"
 	json_add_string "password" "$password"
@@ -43,42 +59,24 @@ sslocal_servers_mkjson() {
 }
 
 sslocal_start() {
-	[ -x "$ss_bindir/sslocal" ] || return 1
-
 	local confjson="$ss_confdir/sslocal.json"
 
-	uci_validate_section "$ss_conf" sslocal sslocal \
-		'disabled:bool:1' \
-		'local_address:ipaddr:0.0.0.0' \
-		'local_port:port:123456' \
-		'mode:or("tcp_only", "udp_only", "tcp_and_udp"):tcp_and_udp' \
-		'timeout:uinteger:60' \
-		'fast_open:bool:0' \
-		'verbose:bool:0' \
-		'reuse_port:bool:0'
-
-	[ "$disabled" -eq "0" ] || return 1
+	config_get enabled sslocal enabled 0
+	[ "$enabled" -eq "0"] && return 0
+	[ -x "$ss_bindir/sslocal" ] || return 1
 
 	json_init
 
+	json_add_array "locals"
+	config_foreach sslocal_locals_mkjson locals
+	json_close_array
+
 	json_add_array "servers"
-	config_foreach sslocal_servers_mkjson sslocal_servers
+	config_foreach sslocal_servers_mkjson servers
 	json_close_array
 
 	json_add_boolean use_syslog 1
-	json_add_boolean ipv6_first "$ipv6_first"
-	json_add_boolean fast_open "$fast_open"
-	json_add_boolean reuse_port "$reuse_port"
-	json_add_boolean no_delay "$no_delay"
-	[ -z "$local_address" ] || json_add_string local_address "$local_address"
-	[ -z "$local_port" ] || json_add_int local_port "$local_port"
-	[ -z "$local_ipv4_address" ] || json_add_string local_ipv4_address "$local_ipv4_address"
-	[ -z "$local_ipv6_address" ] || json_add_string local_ipv6_address "$local_ipv6_address"
-	[ -z "$mode" ] || json_add_string mode "$mode"
-	[ -z "$mtu" ] || json_add_int mtu "$mtu"
-	[ -z "$timeout" ] || json_add_int timeout "$timeout"
-	[ -z "$user" ] || json_add_string user "$user"
-	[ -z "$acl" ] || json_add_string acl "$acl"
+	json_add_boolean reuse_port 1
 	json_dump -i >"$confjson"
 
 	procd_open_instance "$ss_conf"
@@ -105,15 +103,6 @@ reload_service() {
 	start
 }
 
-
 service_triggers() {
 	procd_add_reload_trigger "$ss_conf"
-#	procd_open_validate
-#	validate_server_section
-#	validate_sslocal_section
-#	validate_ssredir_section
-#	validate_ssrules_section
-#	validate_ssserver_section
-#	validate_sstunnel_section
-#	procd_close_validate
 }

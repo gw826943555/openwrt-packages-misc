@@ -20,7 +20,7 @@ PKG_LICENSE_FILES:=LICENSE
 PKG_BUILD_DEPENDS:=rust/host
 PKG_BUILD_PARALLEL:=1
 
-RUST_PKG_FEATURES:=aead-cipher-2022,local-http,local-redir,local-tun,local-tunnel
+RUST_PKG_FEATURES:=aead-cipher-2022,local-dns,local-http,local-redir,local-tun,local-tunnel
 
 include $(INCLUDE_DIR)/package.mk
 include $(TOPDIR)/feeds/packages/lang/rust/rust-package.mk
