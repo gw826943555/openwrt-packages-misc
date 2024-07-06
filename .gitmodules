@@ -28,3 +28,6 @@
 [submodule "luci-app-disks-info"]
 	path = luci-app-disks-info
 	url = https://github.com/gw826943555/luci-app-disks-info
+[submodule "luci-app-temp-status"]
+	path = luci-app-temp-status
+	url = https://github.com/gw826943555/luci-app-temp-status
