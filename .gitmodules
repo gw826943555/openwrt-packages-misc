@@ -25,3 +25,6 @@
 [submodule "openwrt-xray"]
 	path = openwrt-xray
 	url = https://github.com/gw826943555/openwrt-xray.git
+[submodule "luci-app-disks-info"]
+	path = luci-app-disks-info
+	url = https://github.com/gw826943555/luci-app-disks-info
