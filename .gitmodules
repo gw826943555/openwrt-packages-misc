@@ -31,3 +31,6 @@
 [submodule "luci-app-temp-status"]
 	path = luci-app-temp-status
 	url = https://github.com/gw826943555/luci-app-temp-status
+[submodule "luci-app-cpu-status-mini"]
+	path = luci-app-cpu-status-mini
+	url = https://github.com/gw826943555/luci-app-cpu-status-mini
