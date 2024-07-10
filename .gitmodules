@@ -34,3 +34,6 @@
 [submodule "luci-app-cpu-status-mini"]
 	path = luci-app-cpu-status-mini
 	url = https://github.com/gw826943555/luci-app-cpu-status-mini
+[submodule "luci-app-tailscale"]
+	path = luci-app-tailscale
+	url = https://github.com/gw826943555/luci-app-tailscale
