@@ -37,3 +37,6 @@
 [submodule "luci-app-tailscale"]
 	path = luci-app-tailscale
 	url = https://github.com/gw826943555/luci-app-tailscale
+[submodule "openwrt-msd_lite"]
+	path = openwrt-msd_lite
+	url = https://github.com/gw826943555/openwrt_msd_lite
