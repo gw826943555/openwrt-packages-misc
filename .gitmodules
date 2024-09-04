@@ -40,3 +40,6 @@
 [submodule "openwrt-msd_lite"]
 	path = openwrt-msd_lite
 	url = https://github.com/gw826943555/openwrt_msd_lite
+[submodule "openwrt-shadowsocks-rust"]
+	path = openwrt-shadowsocks-rust
+	url = https://github.com/gw826943555/openwrt-shadowsocks-rust
