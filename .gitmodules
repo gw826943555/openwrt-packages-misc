@@ -16,9 +16,6 @@
 [submodule "wrtbwmon"]
 	path = wrtbwmon
 	url = https://github.com/brvphoenix/wrtbwmon
-[submodule "luci-app-unblockneteasemusic"]
-	path = luci-app-unblockneteasemusic
-	url = https://github.com/immortalwrt/luci-app-unblockneteasemusic.git
 [submodule "openwrt-xray"]
 	path = openwrt-xray
 	url = https://github.com/gw826943555/openwrt-xray.git
