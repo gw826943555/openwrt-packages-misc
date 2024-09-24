@@ -1,5 +1,0 @@
-#!/bin/sh
-
-mkdir -p /etc/shadowsocksr
-/etc/init.d/rpcd reload
-exit 0
